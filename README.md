@@ -66,8 +66,8 @@ To manage Android's display refresh rate tables, Android requires a one-time gra
 *No computer required. Takes 1 minute over local Wi-Fi.*
 
 1. Install [Shizuku from Google Play](https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api).
-2. Go to **Settings** $\rightarrow$ **Developer Options** $\rightarrow$ enable **Wireless Debugging**. *(If Developer Options are hidden: Settings $\rightarrow$ About Phone $\rightarrow$ Software Information $\rightarrow$ tap "Build Number" 7 times).*
-3. In Shizuku, tap **Pairing**, enter the 6-digit pairing code from notifications, and start Shizuku service.
+2. Open phone **Settings** -> **Developer Options** -> enable **Wireless Debugging**. *(If Developer mode is not enabled yet: Settings -> About Phone -> Software Information -> tap "Build Number" 7 times).*
+3. In Shizuku, tap **Pairing**, enter the 6-digit code from notifications and start the Shizuku service.
 4. Launch **AdaptiveHz** and tap **"Grant via Shizuku"**. Done!
 
 ### Method 2: Via PC with USB Cable
@@ -88,7 +88,7 @@ Because AdaptiveHz operates strictly offline (`0 network permissions`) for absol
 2. **Automated via Obtainium (Recommended)**:
    For automated background updates without Google Play or app stores, use the open-source update manager [Obtainium](https://github.com/ImranR98/Obtainium):
    - Copy this repo URL: `https://github.com/shepard639/AdaptiveHz`
-   - Paste into Obtainium $\rightarrow$ **Add App**.
+   - Paste into Obtainium -> **Add App**.
    - Obtainium will notify and update AdaptiveHz seamlessly.
 
 ---

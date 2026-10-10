@@ -88,7 +88,7 @@
 2. **Автоматически через Obtainium (Рекомендуется)**:
    Если вы предпочитаете автоматические обновления без магазинов приложений, используйте бесплатный open-source менеджер [Obtainium](https://github.com/ImranR98/Obtainium):
    - Скопируйте ссылку на этот репозиторий: `https://github.com/shepard639/AdaptiveHz`
-   - Вставьте в Obtainium $\rightarrow$ **Add App**.
+   - Вставьте в Obtainium -> **Add App**.
    - Менеджер будет автоматически проверять выход новых версий и обновлять AdaptiveHz в 1 тап.
 
 ---
