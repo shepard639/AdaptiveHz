@@ -35,6 +35,7 @@ android {
             enableV3Signing = true
             val releaseKeystore = rootProject.file("adaptivehz-release.keystore")
             if (releaseKeystore.exists()) {
+                storeFile = releaseKeystore
                 storePassword = localProperties.getProperty("keystore.storePassword") ?: System.getenv("KEYSTORE_PASSWORD") ?: ""
                 keyAlias = localProperties.getProperty("keystore.keyAlias") ?: System.getenv("KEYSTORE_ALIAS") ?: "adaptivehz"
                 keyPassword = localProperties.getProperty("keystore.keyPassword") ?: System.getenv("KEYSTORE_PASSWORD") ?: ""
