@@ -555,6 +555,32 @@ fun AboutScreen(
             }
         }
 
+        // Legal & Trademark Disclaimer Card
+        HealthCraftCard {
+            Text(
+                text = stringResource(R.string.legal_disclaimer_title),
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold,
+                color = TextSecondary
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = stringResource(R.string.legal_trademark_disclaimer),
+                style = MaterialTheme.typography.bodySmall,
+                color = TextTertiary,
+                lineHeight = 16.sp,
+                fontSize = 11.sp
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = stringResource(R.string.legal_warranty_disclaimer),
+                style = MaterialTheme.typography.bodySmall,
+                color = TextTertiary,
+                lineHeight = 16.sp,
+                fontSize = 11.sp
+            )
+        }
+
         Spacer(modifier = Modifier.height(40.dp))
     }
 }

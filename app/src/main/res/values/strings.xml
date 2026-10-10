@@ -252,5 +252,10 @@
     <string name="updates_card_version">Версия: %s (Сборка 1)</string>
     <string name="updates_btn_check">Проверить обновления на GitHub ↗</string>
     <string name="github_releases_url">https://github.com/shepard639/AdaptiveHz/releases</string>
+
+    <!-- Правовая информация и дисклеймеры -->
+    <string name="legal_disclaimer_title">Правовая информация и отказ от ответственности</string>
+    <string name="legal_trademark_disclaimer">Samsung, Galaxy и One UI являются зарегистрированными товарными знаками компании Samsung Electronics Co., Ltd. Данный проект не связан, не спонсируется и не одобряется компанией Samsung.</string>
+    <string name="legal_warranty_disclaimer">Приложение предоставляется «как есть». Разработчики не несут ответственности за возможные сбои в работе операционной системы или сторонних приложений при принудительном изменении частоты развертки.</string>
 </resources>
 
