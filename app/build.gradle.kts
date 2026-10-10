@@ -23,30 +23,24 @@ android {
         }
     }
 
+    val releaseKeystore = rootProject.file("adaptivehz-release.keystore")
+    val hasReleaseKeystore = releaseKeystore.exists()
+
     signingConfigs {
-        create("release") {
-            val localProperties = Properties()
-            val propFile = rootProject.file("local.properties")
-            if (propFile.exists()) {
-                localProperties.load(propFile.inputStream())
-            }
-            enableV1Signing = true
-            enableV2Signing = true
-            enableV3Signing = true
-            val releaseKeystore = rootProject.file("adaptivehz-release.keystore")
-            if (releaseKeystore.exists()) {
+        if (hasReleaseKeystore) {
+            create("release") {
+                val localProperties = Properties()
+                val propFile = rootProject.file("local.properties")
+                if (propFile.exists()) {
+                    localProperties.load(propFile.inputStream())
+                }
+                enableV1Signing = true
+                enableV2Signing = true
+                enableV3Signing = true
                 storeFile = releaseKeystore
                 storePassword = localProperties.getProperty("keystore.storePassword") ?: System.getenv("KEYSTORE_PASSWORD") ?: ""
                 keyAlias = localProperties.getProperty("keystore.keyAlias") ?: System.getenv("KEYSTORE_ALIAS") ?: "adaptivehz"
                 keyPassword = localProperties.getProperty("keystore.keyPassword") ?: System.getenv("KEYSTORE_PASSWORD") ?: ""
-            } else {
-                val debugKeystore = file("${System.getProperty("user.home")}/.android/debug.keystore")
-                if (debugKeystore.exists()) {
-                    storeFile = debugKeystore
-                    storePassword = localProperties.getProperty("keystore.storePassword") ?: "android"
-                    keyAlias = localProperties.getProperty("keystore.keyAlias") ?: "androiddebugkey"
-                    keyPassword = localProperties.getProperty("keystore.keyPassword") ?: "android"
-                }
             }
         }
     }
@@ -54,7 +48,11 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = if (hasReleaseKeystore) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
