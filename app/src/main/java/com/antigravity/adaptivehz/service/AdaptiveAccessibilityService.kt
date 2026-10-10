@@ -172,8 +172,7 @@ class AdaptiveAccessibilityService : AccessibilityService() {
         }
     }
 
-    private var lastThrottledInteractionTime: Long = 0L
-    private val CONTENT_CHANGE_THROTTLE_MS = 250L
+    private var suppressInteractionUntil: Long = 0L
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null) return
@@ -182,38 +181,34 @@ class AdaptiveAccessibilityService : AccessibilityService() {
         // If fixed mode, ignore touch-driven adaptive triggers
         if (mode == OperationMode.FIXED_120 || mode == OperationMode.FIXED_60) return
 
+        val eventPkg = event.packageName?.toString() ?: ""
+
+        // If event originates from AdaptiveHz itself, ignore it:
+        // MainActivity.dispatchTouchEvent handles real user touches directly and accurately
+        if (eventPkg == packageName && event.eventType != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            return
+        }
+
         when (event.eventType) {
             AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> {
-                val pkg = event.packageName?.toString() ?: return
-                if (pkg != currentForegroundPackage && pkg != packageName) {
-                    onForegroundAppChanged(pkg)
-                } else {
-                    // Window state transition within current app or launcher (e.g. home page swipe, drawer, popup)
+                if (eventPkg.isNotEmpty() && eventPkg != currentForegroundPackage && eventPkg != packageName) {
+                    onForegroundAppChanged(eventPkg)
+                } else if (eventPkg == "com.sec.android.app.launcher") {
+                    // Samsung Launcher horizontal home screen page swipe
                     onUserInteraction()
                 }
             }
-            AccessibilityEvent.TYPE_VIEW_SCROLLED,
-            AccessibilityEvent.TYPE_VIEW_CLICKED,
-            AccessibilityEvent.TYPE_VIEW_LONG_CLICKED,
-            AccessibilityEvent.TYPE_VIEW_SELECTED,
             AccessibilityEvent.TYPE_TOUCH_INTERACTION_START,
             AccessibilityEvent.TYPE_GESTURE_DETECTION_START,
-            AccessibilityEvent.TYPE_VIEW_FOCUSED,
-            AccessibilityEvent.TYPE_TOUCH_EXPLORATION_GESTURE_START,
-            AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED -> {
-                onUserInteraction()
-            }
-            AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED -> {
-                // Catch view scroll and dynamic changes in WebViews, Compose, and launchers
-                // Ignore system UI clock/status bar ticks to prevent unnecessary boosts during idle
-                val pkg = event.packageName?.toString() ?: ""
-                if (pkg != "com.android.systemui") {
-                    val now = System.currentTimeMillis()
-                    if (now - lastThrottledInteractionTime >= CONTENT_CHANGE_THROTTLE_MS) {
-                        lastThrottledInteractionTime = now
-                        onUserInteraction()
-                    }
+            AccessibilityEvent.TYPE_VIEW_CLICKED,
+            AccessibilityEvent.TYPE_VIEW_LONG_CLICKED,
+            AccessibilityEvent.TYPE_VIEW_SCROLLED -> {
+                val now = System.currentTimeMillis()
+                // If within transition suppression window, ignore synthetic scroll/view events
+                if (now < suppressInteractionUntil && event.eventType != AccessibilityEvent.TYPE_TOUCH_INTERACTION_START) {
+                    return
                 }
+                onUserInteraction()
             }
         }
     }
@@ -337,6 +332,7 @@ class AdaptiveAccessibilityService : AccessibilityService() {
             if (currentMode == OperationMode.ADAPTIVE || currentMode == OperationMode.ECO) {
                 if (currentAppMode != ProfileMode.FORCE_120) {
                     Log.d(TAG, "Idle timeout reached (${timeoutMillis}ms) in $currentMode -> dropping to 60Hz")
+                    suppressInteractionUntil = System.currentTimeMillis() + 600L
                     controller.dropToLow(60)
                     AdaptiveCoordinator.setAdaptiveState(AdaptiveState.IDLE_TIMEOUT)
                 }
