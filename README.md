@@ -12,7 +12,7 @@
   <b>Интеллектуальная адаптивная частота экрана, 120 Гц в режиме энергосбережения и экономия до 45% батареи на экранах без LTPO.</b>
 </p>
 
-[**Скачать APK (Релизы)**](https://github.com/Antigravity/AdaptiveHz/releases) • [**Инструкция по установке**](#-быстрый-старт-и-установка) • [**О проекте HealthCraft**](#-экосистема-healthcraft)
+[**Скачать APK (Релизы)**](https://github.com/shepard639/AdaptiveHz/releases) • [**Инструкция по установке**](#-быстрый-старт-и-установка) • [**О проекте HealthCraft**](#-экосистема-healthcraft)
 
 </div>
 
@@ -105,7 +105,7 @@
 
 ```bash
 # Клонирование репозитория
-git clone https://github.com/Antigravity/AdaptiveHz.git
+git clone https://github.com/shepard639/AdaptiveHz.git
 cd AdaptiveHz
 
 # Сборка debug APK
