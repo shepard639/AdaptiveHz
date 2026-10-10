@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Премиальная палитра: нежные салатово-мятные тона (Mint & Lime Pastel) -->
+    <color name="mint_primary">#8CE8A2</color>
+    <color name="mint_primary_variant">#66D281</color>
+    <color name="lime_accent">#A3E635</color>
+    <color name="lime_light">#BEF264</color>
+
+    <color name="sage_background">#0F1411</color>
+    <color name="sage_surface">#161E19</color>
+    <color name="sage_card">#1C2620</color>
+    <color name="sage_card_elevated">#25332B</color>
+    <color name="sage_card_stroke">#2D3F35</color>
+
+    <color name="text_primary">#F3F5F4</color>
+    <color name="text_secondary">#9CAAA0</color>
+    <color name="text_tertiary">#6B7D71</color>
+
+    <color name="indicator_60hz">#8CE8A2</color>
+    <color name="indicator_120hz">#BEF264</color>
+    <color name="indicator_warning">#FBBF24</color>
+</resources>

@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AdaptiveHz</string>
+    <string name="tile_label">Частота экрана</string>
+    <string name="tile_subtitle_adaptive">Адаптивный (%1$d Гц)</string>
+    <string name="tile_subtitle_fixed">Фикс %1$d Гц</string>
+    <string name="accessibility_service_desc">AdaptiveHz отслеживает касания и активные приложения для автоматического переключения между 60 Гц и 120 Гц для экономии батареи.</string>
+
+    <!-- Навигация -->
+    <string name="nav_dashboard">Главная</string>
+    <string name="nav_profiles">Приложения</string>
+    <string name="nav_about">О телефоне</string>
+
+    <!-- Главный экран -->
+    <string name="title_dashboard">Управление экраном</string>
+    <string name="subtitle_dashboard">Интеллектуальная адаптивная частота обновления</string>
+    <string name="master_switch_title">Адаптивный режим</string>
+    <string name="master_switch_desc">120 Гц при касаниях, 60 Гц при чтении и просмотре видео</string>
+
+    <!-- Режимы (короткие метки) -->
+    <string name="mode_adaptive_short">Адаптив</string>
+    <string name="mode_fixed_60_short">Фикс 60</string>
+    <string name="mode_fixed_120_short">Фикс 120</string>
+    <string name="mode_eco_short">Эко</string>
+    <string name="mode_chip_adaptive_label">⚡ Адаптив</string>
+    <string name="mode_chip_60_label">🔒 60 Гц</string>
+    <string name="mode_chip_120_label">🚀 120 Гц</string>
+    <string name="mode_chip_eco_label">🌱 Эко (1.5 с)</string>
+
+    <!-- Карточка текущего состояния -->
+    <string name="current_hz_label">Частота экрана</string>
+    <string name="hz_unit">Гц</string>
+    <string name="service_status_active">Активна</string>
+    <string name="service_status_idle">Ожидание</string>
+    <string name="state_desc_fixed_120">Фиксированные 120 Гц • Без сбросов</string>
+    <string name="state_desc_fixed_60">Фиксированные 60 Гц • Энергосбережение</string>
+    <string name="state_desc_eco_touch">Эко • Касание (120 Гц)</string>
+    <string name="state_desc_eco_idle">Эко • Покой (60 Гц)</string>
+    <string name="state_desc_eco_default">Эко • Сброс за 1.5 сек</string>
+    <string name="state_desc_adaptive_touch">Адаптив • Касание (120 Гц)</string>
+    <string name="state_desc_adaptive_idle">Адаптив • Покой (60 Гц)</string>
+    <string name="state_desc_locked_app">Профиль приложения</string>
+    <string name="state_desc_disabled">Отключено</string>
+
+    <!-- Метрики дашборда -->
+    <string name="metric_mode_title">Режим</string>
+    <string name="metric_mode_sub_adaptive">60 / 120 Гц</string>
+    <string name="metric_mode_sub_fixed_60">Всегда 60</string>
+    <string name="metric_mode_sub_fixed_120">Всегда 120</string>
+    <string name="metric_mode_sub_eco">Сброс 1.5 с</string>
+    <string name="metric_power_title">Питание</string>
+    <string name="metric_power_charging">Зарядка</string>
+    <string name="metric_power_battery">Батарея</string>
+    <string name="metric_power_sub_charging">120 Гц провод</string>
+    <string name="metric_power_sub_battery">Обычное</string>
+    <string name="metric_timeout_title">Таймаут</string>
+    <string name="metric_timeout_eco">1.5 сек</string>
+    <string name="metric_timeout_seconds">%1$d сек</string>
+    <string name="metric_timeout_sub_adaptive">до 60 Гц</string>
+    <string name="metric_timeout_sub_fixed">постоянно</string>
+    <string name="metric_savings_title">Экономия</string>
+    <string name="metric_savings_value">~35%</string>
+    <string name="metric_savings_sub">заряда</string>
+
+    <!-- Выбор режимов -->
+    <string name="quick_modes_title">Режимы работы</string>
+    <string name="quick_modes_desc">Выберите желаемый сценарий герцовки</string>
+    <string name="toast_mode_adaptive">Включен адаптивный режим (120/60 Гц)</string>
+    <string name="toast_mode_60">Зафиксировано 60 Гц во всей системе</string>
+    <string name="toast_mode_120">Зафиксировано 120 Гц (без сбросов)</string>
+    <string name="toast_mode_eco">Эко-режим: быстрый сброс за 1.5 сек</string>
+
+    <!-- Разрешения -->
+    <string name="permission_title">Статус системных прав</string>
+    <string name="permission_secure_granted">Разрешение ADB получено</string>
+    <string name="permission_secure_missing">Требуется разрешение через ADB</string>
+    <string name="permission_secure_guide">Для изменения частоты экрана выполните ADB команду:</string>
+    <string name="permission_secure_command">adb shell pm grant com.antigravity.adaptivehz android.permission.WRITE_SECURE_SETTINGS</string>
+    <string name="permission_command_copied">Команда скопирована в буфер обмена</string>
+    <string name="permission_copy_action">Скопировать команду</string>
+    <string name="permission_accessibility_granted">Сервис доступности включен</string>
+    <string name="permission_accessibility_missing">Включите сервис доступности</string>
+    <string name="permission_accessibility_action">Открыть Настройки</string>
+
+    <!-- Настройки адаптивности -->
+    <string name="section_tuning">Настройка динамики</string>
+    <string name="idle_timeout_title">Таймаут перехода в 60 Гц</string>
+    <string name="idle_timeout_desc">Время без касаний до снижения частоты: %1$d сек.</string>
+    <string name="high_hz_target">Максимальная частота (при касании)</string>
+    <string name="low_hz_target">Минимальная частота (в покое)</string>
+
+    <!-- Интеллектуальная защита -->
+    <string name="section_smart_protection">Интеллектуальная защита</string>
+    <string name="psm_bypass_title">120 Гц в режиме энергосбережения</string>
+    <string name="psm_bypass_desc">Сохранять адаптивные 120 Гц даже при включенном режиме энергосбережения One UI</string>
+    <string name="smart_charging_title">Умная зарядка (120 Гц на проводе)</string>
+    <string name="smart_charging_desc">Держать постоянные 120 Гц без таймаута сброса, пока телефон подключен к зарядному устройству</string>
+    <string name="battery_defender_title">Защитник низкого заряда (&lt; 20%)</string>
+    <string name="battery_defender_desc">Автоматически фиксировать 60 Гц во всей системе при низком заряде, чтобы телефон не выключился</string>
+    <string name="thermal_guard_title">Термальная защита от троттлинга (&gt; 41.5°C)</string>
+    <string name="thermal_guard_desc">Временно ограничивать частоту до 60 Гц при перегреве батареи для защиты от деградации</string>
+
+    <!-- Индикатор в строке состояния (Status Bar) -->
+    <string name="status_bar_indicator_title">Индикатор в строке состояния</string>
+    <string name="status_bar_indicator_desc">Отображает текущую частоту (60 или 120 Гц) прямо рядом с часами вверху экрана без перекрытия приложений</string>
+    <string name="status_bar_indicator_active">Индикатор активен в статус-баре</string>
+    <string name="status_bar_indicator_enable">Включить индикатор в статус-баре</string>
+
+    <!-- О телефоне (About Screen) -->
+    <string name="about_title">О телефоне и дисплее</string>
+    <string name="about_subtitle">Аппаратные характеристики дисплея и контроллера панели</string>
+    <string name="about_device_label">Устройство:</string>
+    <string name="about_model_label">Модель:</string>
+    <string name="about_hardware_modes_title">Аппаратные режимы дисплея:</string>
+    <string name="about_mode_item">Режим %1$d Гц</string>
+    <string name="about_fps_mode_1">120.00 fps (Mode 1)</string>
+    <string name="about_fps_mode_2">60.00 fps (Mode 2)</string>
+    <string name="about_hardware_note_title">Аппаратные тайминги AMOLED:</string>
+    <string name="about_hardware_note_text">Контроллер дисплея в смартфонах без LTPO поддерживает дискретные режимы таймингов (например, 60 Гц и 120 Гц). AdaptiveHz обеспечивает максимальную автономность благодаря плавному динамическому переключению между режимами.</string>
+
+    <!-- Профили приложений -->
+    <string name="profiles_title">Профили приложений</string>
+    <string name="profiles_subtitle">Ограничение частоты в видеосервисах и отдельных приложениях</string>
+    <string name="search_apps_hint">Поиск приложений…</string>
+    <string name="mode_chip_60">60 Гц</string>
+    <string name="mode_chip_120">120 Гц</string>
+    <string name="mode_chip_adaptive">Адаптив</string>
+    <string name="video_apps_preset_notice">Для YouTube, RuTube, VK Видео и Кинопоиска автоматически активен режим 60 Гц для сохранения заряда.</string>
+
+    <!-- Уведомления -->
+    <string name="notification_channel_name">Служба оверлея AdaptiveHz</string>
+    <string name="notification_channel_desc">Отображает текущую частоту экрана в реальном времени</string>
+    <string name="status_bar_channel_name">Индикатор частоты в строке состояния</string>
+    <string name="status_bar_channel_desc">Отображает текущую частоту экрана рядом с часами</string>
+    <string name="notification_title">AdaptiveHz активен</string>
+    <string name="notification_text">Плавающий индикатор запущен</string>
+    <string name="notification_status_title">AdaptiveHz: %1$d Гц</string>
+    <string name="notification_action_60">60 Гц</string>
+    <string name="notification_action_adaptive">Адаптив</string>
+    <string name="notification_action_120">120 Гц</string>
+
+    <!-- Онбординг (Мастер первого запуска) -->
+    <string name="onboarding_title_welcome">Добро пожаловать в AdaptiveHz</string>
+    <string name="onboarding_subtitle_welcome">Интеллектуальная адаптивная частота обновления экрана и экономия заряда батареи для смартфонов Samsung Galaxy</string>
+    <string name="onboarding_step_1_title">1. Анализ дисплея</string>
+    <string name="onboarding_step_1_desc">Проверка аппаратных возможностей дисплея вашего смартфона Samsung</string>
+    <string name="onboarding_device_detected">Устройство: %1$s</string>
+    <string name="onboarding_modes_supported">Поддерживаемые частоты: %1$s</string>
+    <string name="onboarding_next_action">Продолжить</string>
+    <string name="onboarding_back_action">Назад</string>
+    <string name="onboarding_skip_action">Пропустить</string>
+    <string name="onboarding_step_2_title">2. Системные права</string>
+    <string name="onboarding_step_2_desc">Для управления частотой обновления требуется системное разрешение WRITE_SECURE_SETTINGS</string>
+    <string name="onboarding_shizuku_option_title">Через Shizuku (без компьютера)</string>
+    <string name="onboarding_shizuku_option_desc">Авторизация в 1 клик прямо на телефоне через приложение Shizuku</string>
+    <string name="onboarding_shizuku_btn_grant">Выдать через Shizuku</string>
+    <string name="onboarding_shizuku_btn_install">Открыть Shizuku</string>
+    <string name="onboarding_shizuku_not_running">Сервис Shizuku не активен. Запустите его или настройте через ПК.</string>
+    <string name="onboarding_adb_option_title">Через компьютер по USB</string>
+    <string name="onboarding_adb_option_desc">Подключите смартфон к ПК и выполните команду в командной строке:</string>
+    <string name="onboarding_permission_granted_badge">Разрешение получено</string>
+    <string name="onboarding_step_3_title">3. Отслеживание касаний</string>
+    <string name="onboarding_step_3_desc">Служба специальных возможностей нужна для включения 120 Гц при касаниях и сброса до 60 Гц при чтении.</string>
+    <string name="onboarding_restricted_warning_title">Внимание (Android 13+):</string>
+    <string name="onboarding_restricted_warning_desc">Если переключатель серый («Ограниченные настройки»):\n1. Откройте Настройки телефона -> Приложения -> AdaptiveHz\n2. Нажмите меню «три точки» вверху экрана\n3. Выберите «Разрешить ограниченные настройки»</string>
+    <string name="onboarding_open_accessibility">Открыть специальные возможности</string>
+    <string name="onboarding_accessibility_granted_badge">Служба активна</string>
+    <string name="onboarding_step_4_title">4. Защита от усыпления</string>
+    <string name="onboarding_step_4_desc">Samsung One UI может отключить службу через 3 дня. Отключите оптимизацию батареи для стабильной работы.</string>
+    <string name="onboarding_disable_battery_opt">Отключить оптимизацию батареи</string>
+    <string name="onboarding_battery_opt_granted">Защита активна</string>
+    <string name="onboarding_step_5_title">5. Стартовый режим</string>
+    <string name="onboarding_step_5_desc">Выберите предпочитаемый сценарий управления частотой обновления</string>
+    <string name="onboarding_finish_btn">Завершить и начать</string>
+    <string name="onboarding_toast_granted">Разрешение успешно получено через Shizuku!</string>
+    <string name="onboarding_toast_error">Ошибка Shizuku. Проверьте права и запуск сервиса.</string>
+
+    <!-- Инструкции для Режима разработчика и Отладки -->
+    <string name="dev_mode_guide_title">Инструкция: как включить отладку и Shizuku</string>
+    <string name="dev_mode_guide_subtitle">Пошаговое руководство для Samsung, Xiaomi и других брендов</string>
+    <string name="dev_mode_samsung_title">Samsung Galaxy (One UI)</string>
+    <string name="dev_mode_samsung_steps">1. Нажмите «Открыть О телефоне» ниже.\n2. Откройте «Сведения о ПО».\n3. Быстро нажмите 7 раз на «Номер сборки» (появится сообщение «Режим разработчика включен»).\n4. Вернитесь в Настройки -> в самом низу откройте «Параметры разработчика».\n5. Включите пункт «Отладка по USB» (или «Беспроводная отладка» для Shizuku).</string>
+    <string name="dev_mode_xiaomi_title">Xiaomi / HyperOS / MIUI</string>
+    <string name="dev_mode_xiaomi_steps">1. Настройки -> «О телефоне» -> быстро нажмите 7 раз на «Версия ОС» (или «Версия MIUI»).\n2. Настройки -> «Расширенные настройки» -> «Для разработчиков».\n3. ВНИМАНИЕ: включите ОБА пункта:\n • «Отладка по USB»\n • «Отладка по USB (Настройки безопасности)» (требуется вход в аккаунт Mi), иначе система заблокирует выдачу разрешений.</string>
+    <string name="dev_mode_other_title">Pixel / OnePlus / Realme / Прочие</string>
+    <string name="dev_mode_other_steps">1. Настройки -> «О телефоне» -> 7 раз по «Номер сборки».\n2. Настройки -> «Система» -> «Для разработчиков».\n3. Включите «Отладка по USB».</string>
+    <string name="shizuku_wireless_guide">Для запуска Shizuku без ПК включите «Беспроводная отладка» в Параметрах разработчика, нажмите «Подключить с помощью кода» и введите код в Shizuku.</string>
+    <string name="btn_open_device_info">Открыть «О телефоне»</string>
+    <string name="btn_open_dev_settings">Открыть «Параметры разработчика»</string>
+    <string name="btn_open_app_details">Свойства приложения</string>
+
+    <!-- Пошаговое руководство для Специальных возможностей -->
+    <string name="accessibility_guide_header">Как включить службу доступности:</string>
+    <string name="accessibility_guide_step1">1. Нажмите кнопку «Открыть специальные возможности» ниже.</string>
+    <string name="accessibility_guide_step2">2. В открывшемся списке найдите пункт «Установленные приложения» (или «Скачанные службы»).</string>
+    <string name="accessibility_guide_step3">3. Выберите «AdaptiveHz» в списке.</string>
+    <string name="accessibility_guide_step4">4. Переведите переключатель в положение «Включено» и подтвердите запрос.</string>
+
+    <!-- Защита от усыпления -->
+    <string name="battery_opt_granted_desc">Защита активна. Приложение защищено от принудительного усыпления и выгрузки из памяти.</string>
+    <string name="battery_opt_prompt_toast">Подтвердите разрешение в системном диалоге</string>
+    <string name="battery_opt_fallback_action">Настройки батареи приложения</string>
+
+    <!-- Плавающий экранчик (HUD) и Индикация -->
+    <string name="section_display_hud_title">Отображение частоты экрана</string>
+    <string name="section_display_hud_desc">Способы наблюдения за герцовкой в реальном времени</string>
+    <string name="floating_hud_title">Плавающий экранчик (HUD)</string>
+    <string name="floating_hud_desc">Компактная плашка поверх всех окон. Показывает текущие Гц в любом приложении, перемещается пальцем.</string>
+    <string name="floating_hud_active">Экранчик активен поверх окон</string>
+    <string name="floating_hud_enable">Включить плавающий экранчик</string>
+    <string name="overlay_permission_dialog_title">Разрешение «Поверх других приложений»</string>
+    <string name="overlay_permission_dialog_desc">Для отображения плавающего экранчика требуется системное разрешение на наложение поверх окон. Включите переключатель для AdaptiveHz в открывшемся системном окне.</string>
+    <string name="overlay_permission_dialog_btn">Открыть настройки наложения</string>
+    <string name="notification_permission_dialog_title">Разрешение на показ уведомлений</string>
+    <string name="notification_permission_dialog_desc">Для отображения значка герцовки в строке состояния рядом с системными часами требуется разрешить показ уведомлений.</string>
+    <string name="notification_permission_dialog_btn">Разрешить уведомления</string>
+    <string name="status_bar_notice_hint">Совет: если иконка скрыта, в настройках телефона откройте «Уведомления -> Дополнительные параметры -> Строка состояния -> Все уведомления».</string>
+
+    <!-- Строки для HUD и Быстрых настроек -->
+    <string name="hud_toast_adaptive_for_app">AdaptiveHz: Адаптивный режим для %1$s</string>
+    <string name="hud_toast_force60_for_app">AdaptiveHz: Фикс 60 Гц для %1$s</string>
+    <string name="hud_toast_hint">AdaptiveHz: Перетащите виджет или нажмите в любом приложении</string>
+    <string name="tile_permission_required">AdaptiveHz: Требуется разрешение WRITE_SECURE_SETTINGS. Откройте приложение.</string>
+
+    <!-- Пояснение Shizuku для обычных пользователей -->
+    <string name="shizuku_help_pill_btn">Что такое Shizuku и зачем он нужен? 💡</string>
+    <string name="shizuku_explainer_title">Зачем нужен системный ключ Shizuku?</string>
+    <string name="shizuku_explainer_why_title">Почему приложение не может включить 120 Гц сразу?</string>
+    <string name="shizuku_explainer_why_desc">В Android управление частотой обновления экрана защищено системой от обычных приложений. Раньше для разблокировки требовалось подключать смартфон к компьютеру через USB-кабель и вводить команды в черном окне терминала.</string>
+    <string name="shizuku_explainer_what_title">Что такое Shizuku?</string>
+    <string name="shizuku_explainer_what_desc">Shizuku — это официальный, признанный во всем мире инструмент с открытым исходным кодом (доступен в Google Play). Он подключается к встроенной в телефон функции «Беспроводная отладка» по Wi-Fi и работает как безопасный цифровой ключ прямо внутри устройства.</string>
+    <string name="shizuku_explainer_safety_title">Это безопасно?</string>
+    <string name="shizuku_explainer_safety_desc">Абсолютно безопасно. Приложение не требует Root-прав, не модифицирует прошивку, не имеет разрешения на доступ в интернет (0 сетевых пакетов) и ничего никуда не передает.</string>
+    <string name="shizuku_explainer_steps_title">Как настроить за 1 минуту:</string>
+    <string name="shizuku_explainer_step1">1. Установите Shizuku из Google Play.</string>
+    <string name="shizuku_explainer_step2">2. В «Параметрах разработчика» включите «Беспроводная отладка» и введите код сопряжения в Shizuku.</string>
+    <string name="shizuku_explainer_step3">3. Нажмите в AdaptiveHz кнопку «Выдать через Shizuku».</string>
+    <string name="shizuku_explainer_close">Все понятно, спасибо!</string>
+
+    <!-- Кросс-продвижение HealthCraft -->
+    <string name="healthcraft_promo_card_title">Энергия смартфона и энергия тела</string>
+    <string name="healthcraft_promo_card_subtitle">Экосистема HealthCraft</string>
+    <string name="healthcraft_promo_card_desc">AdaptiveHz бережет заряд аккумулятора вашего смартфона, а HealthCraft помогает сохранять и приумножать личную энергию вашего тела: умный AI-трекинг питания по фото, тренировки и 100% приватность с zero-knowledge шифрованием.</string>
+    <string name="healthcraft_promo_btn">Попробовать HealthCraft Pro ↗</string>
+    <string name="healthcraft_about_ecosystem_title">Экосистема HealthCraft</string>
+    <string name="healthcraft_about_ecosystem_desc">AdaptiveHz разработан как открытый инструмент в рамках экосистемы HealthCraft (healthcraft.pro). Наша философия — разумное и бережное отношение к энергии: от оптимизации дисплея гаджета до восстановления сил, питания и тренировок человека.</string>
+    <string name="healthcraft_website_url">https://healthcraft.pro/?ref=adaptivehz</string>
+</resources>
