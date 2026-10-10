@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.IOException
+import com.antigravity.adaptivehz.core.LanguageHelper
 
 enum class OperationMode {
     ADAPTIVE,
@@ -78,6 +79,9 @@ class SettingsRepository(context: Context) {
     private val _isOnboardingCompleted = MutableStateFlow(false)
     val isOnboardingCompleted: StateFlow<Boolean> = _isOnboardingCompleted.asStateFlow()
 
+    private val _appLanguage = MutableStateFlow(LanguageHelper.getCurrentLanguage())
+    val appLanguage: StateFlow<String> = _appLanguage.asStateFlow()
+
     private val _appProfiles = MutableStateFlow<Map<String, ProfileMode>>(DEFAULT_VIDEO_APPS)
     val appProfiles: StateFlow<Map<String, ProfileMode>> = _appProfiles.asStateFlow()
 
@@ -113,6 +117,7 @@ class SettingsRepository(context: Context) {
                     _isHudEnabled.value = prefs[KEY_HUD_ENABLED] ?: false
                     _isStatusBarIndicatorEnabled.value = prefs[KEY_STATUS_BAR_INDICATOR_ENABLED] ?: true
                     _isOnboardingCompleted.value = prefs[KEY_ONBOARDING_COMPLETED] ?: false
+                    _appLanguage.value = prefs[KEY_APP_LANGUAGE] ?: LanguageHelper.getCurrentLanguage()
 
                     // Load app profile overrides
                     val profilesMap = HashMap<String, ProfileMode>(DEFAULT_VIDEO_APPS)
@@ -266,6 +271,16 @@ class SettingsRepository(context: Context) {
         }
     }
 
+    fun setAppLanguage(langCode: String) {
+        _appLanguage.value = langCode
+        LanguageHelper.setLanguage(langCode)
+        repositoryScope.launch {
+            dataStore.edit { preferences ->
+                preferences[KEY_APP_LANGUAGE] = langCode
+            }
+        }
+    }
+
     companion object {
         private const val TAG = "SettingsRepository"
         const val PREFS_NAME = "adaptive_hz_settings"
@@ -282,6 +297,7 @@ class SettingsRepository(context: Context) {
         val KEY_HUD_ENABLED = booleanPreferencesKey("key_hud_enabled")
         val KEY_STATUS_BAR_INDICATOR_ENABLED = booleanPreferencesKey("key_status_bar_indicator_enabled")
         val KEY_ONBOARDING_COMPLETED = booleanPreferencesKey("key_onboarding_completed")
+        val KEY_APP_LANGUAGE = stringPreferencesKey("key_app_language")
         const val PREFIX_APP_PROFILE = "profile_"
 
         // Default profiles for video apps and camera (lock to 60Hz to save battery)

@@ -72,7 +72,9 @@ store_assets/*.aab
 # Documentation: only public documentation is tracked
 *.md
 !README.md
+!README_RU.md
 !PRIVACY_POLICY.md
+!PRIVACY_POLICY_EN.md
 
 # OS-specific
 .DS_Store

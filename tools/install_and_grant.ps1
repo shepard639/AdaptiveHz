@@ -34,11 +34,11 @@ if ($LASTEXITCODE -ne 0) {
 Write-Host "[OK] Приложение успешно установлено!" -ForegroundColor Green
 
 Write-Host "`n[3/4] Выдача системного разрешения WRITE_SECURE_SETTINGS..." -ForegroundColor Yellow
-& $adbPath shell pm grant com.antigravity.adaptivehz android.permission.WRITE_SECURE_SETTINGS
+& $adbPath shell pm grant com.healthcraft.adaptivehz android.permission.WRITE_SECURE_SETTINGS
 Write-Host "[OK] Системное разрешение WRITE_SECURE_SETTINGS выдано!" -ForegroundColor Green
 
 Write-Host "`n[4/4] Запуск AdaptiveHz..." -ForegroundColor Yellow
-& $adbPath shell am start -n com.antigravity.adaptivehz/.ui.MainActivity
+& $adbPath shell am start -n com.healthcraft.adaptivehz/com.antigravity.adaptivehz.ui.MainActivity
 
 Write-Host "`n=====================================================================" -ForegroundColor Cyan
 Write-Host "                    УСТАНОВКА ЗАВЕРШЕНА УСПЕШНО!                     " -ForegroundColor Green

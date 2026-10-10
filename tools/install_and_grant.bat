@@ -57,7 +57,7 @@ echo [OK] Приложение успешно установлено!
 echo.
 
 echo [3/4] Выдача системного разрешения WRITE_SECURE_SETTINGS...
-%ADB% shell pm grant com.antigravity.adaptivehz android.permission.WRITE_SECURE_SETTINGS
+%ADB% shell pm grant com.healthcraft.adaptivehz android.permission.WRITE_SECURE_SETTINGS
 if errorlevel 1 (
     echo [!] Предупреждение при выдаче прав. Проверьте права ADB.
 ) else (
@@ -66,7 +66,7 @@ if errorlevel 1 (
 echo.
 
 echo [4/4] Запуск AdaptiveHz на телефоне...
-%ADB% shell am start -n com.antigravity.adaptivehz/.ui.MainActivity >nul 2>&1
+%ADB% shell am start -n com.healthcraft.adaptivehz/com.antigravity.adaptivehz.ui.MainActivity >nul 2>&1
 echo.
 echo =====================================================================
 echo                     УСТАНОВКА ЗАВЕРШЕНА УСПЕШНО!

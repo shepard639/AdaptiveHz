@@ -739,7 +739,7 @@ fun DashboardScreen(
                 },
                 dismissButton = {
                     TextButton(onClick = { showOverlayDialog = false }) {
-                        Text("Отмена", color = TextSecondary)
+                        Text(stringResource(R.string.btn_cancel), color = TextSecondary)
                     }
                 },
                 containerColor = HealthCraftSurface,
@@ -777,7 +777,7 @@ fun DashboardScreen(
                 },
                 dismissButton = {
                     TextButton(onClick = { showNotificationDialog = false }) {
-                        Text("Отмена", color = TextSecondary)
+                        Text(stringResource(R.string.btn_cancel), color = TextSecondary)
                     }
                 },
                 containerColor = HealthCraftSurface,
@@ -1158,7 +1158,7 @@ fun LiveRefreshRateBadge(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "ТЕКУЩАЯ",
+                text = stringResource(R.string.badge_current),
                 fontSize = 9.sp,
                 fontWeight = FontWeight.Bold,
                 color = HealthCraftPrimary

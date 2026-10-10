@@ -1,7 +1,8 @@
-# AdaptiveHz — Умные 120 Гц и Батарея для Samsung Galaxy
+# AdaptiveHz — Smart 120Hz & Battery Optimizer for Samsung Galaxy
 
 <div align="center">
 
+[![Читать на русском](https://img.shields.io/badge/Язык-Русский-red?style=for-the-badge)](README_RU.md)
 ![Platform](https://img.shields.io/badge/Platform-Android%2010+-00A86B?style=for-the-badge&logo=android&logoColor=white)
 ![Samsung One UI](https://img.shields.io/badge/Samsung%20One%20UI-2.5%20--%206.1+-1428A0?style=for-the-badge&logo=samsung&logoColor=white)
 ![Permissions](https://img.shields.io/badge/Internet-0%20Permissions%20(100%25%20Private)-success?style=for-the-badge)
@@ -9,127 +10,129 @@
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=for-the-badge)
 
 <p align="center">
-  <b>Интеллектуальная адаптивная частота экрана, 120 Гц в режиме энергосбережения и экономия до 45% батареи на экранах без LTPO.</b>
+  <b>Intelligent dynamic refresh rate, 120Hz in Power Saving Mode, and up to +45% battery life on non-LTPO Samsung displays.</b>
 </p>
 
-[**Скачать APK (Релизы)**](https://github.com/shepard639/AdaptiveHz/releases) • [**Инструкция по установке**](#-быстрый-старт-и-установка) • [**О проекте HealthCraft**](#-экосистема-healthcraft)
+[**Download APK (Releases)**](https://github.com/shepard639/AdaptiveHz/releases) • [**Installation Guide**](#-quick-start--setup) • [**About HealthCraft**](#-healthcraft-ecosystem) • [**🇷🇺 Читать на русском**](README_RU.md)
 
 </div>
 
 ---
 
-> ### 🌿 Экосистема [HealthCraft](https://healthcraft.pro/?ref=adaptivehz)
-> **AdaptiveHz** разработан как открытый инструмент команды **[HealthCraft](https://healthcraft.pro/?ref=adaptivehz)**.  
-> Наша общая философия — разумное и бережное отношение к энергии.  
-> 📱 **AdaptiveHz** оптимизирует расход аккумулятора вашего смартфона,  
-> 🧘 **HealthCraft** помогает управлять личной энергией вашего тела: умный AI-анализ питания по фото блюд, КБЖУ, тренировки и 100% приватность с zero-knowledge шифрованием медицинских данных.  
-> 👉 **Попробуйте бесплатно прямо в браузере или на Android:** [healthcraft.pro](https://healthcraft.pro/?ref=adaptivehz)
+> ### 🌿 [HealthCraft](https://healthcraft.pro/?ref=adaptivehz) Ecosystem
+> **AdaptiveHz** is created and maintained as an open-source utility by the **[HealthCraft Team](https://healthcraft.pro/?ref=adaptivehz)**.  
+> Our overarching philosophy is mindful energy stewardship.  
+> 📱 **AdaptiveHz** optimizes your smartphone's battery endurance,  
+> 🧘 **HealthCraft** helps optimize and elevate your personal body energy: intelligent AI food tracking by photo, macronutrients, workouts, and 100% zero-knowledge medical privacy.  
+> 👉 **Try it free in your browser or on Android:** [healthcraft.pro](https://healthcraft.pro/?ref=adaptivehz)
 
 ---
 
-## ⚡ О проекте
+## ⚡ Overview
 
-В смартфонах Samsung Galaxy без технологии LTPO (серии Galaxy S20, S20 FE, S21, S21 FE, A52, A53, A54, A73, Tab и др.) стандартная система One UI предлагает лишь два компромиссных варианта:
-1. **Постоянные 120 Гц**: экран тратит заряд батареи даже при чтении статического текста.
-2. **Режим энергосбережения**: Samsung **принудительно блокирует экран на 60 Гц**, лишая смартфон флагманской плавности.
+On Samsung Galaxy devices with fixed-rate AMOLED displays (Galaxy S20, S20 FE, S21, S21 FE, A52, A53, A54, A73, Galaxy Tab series, etc.), the stock One UI firmware offers only two rigid choices:
+1. **Fixed 120 Hz**: Consumes battery rapidly even while looking at static text or reading articles.
+2. **Power Saving Mode**: Samsung **forces the panel down to 60 Hz**, destroying the smooth flagship experience.
 
-**AdaptiveHz решает обе проблемы:**
-- Возвращает **настоящие 120 Гц в режиме энергосбережения** One UI.
-- Автоматически повышает частоту до **120 Гц при касаниях и скролле**, и мгновенно сбрасывает до **60 Гц при чтении** (экономия до **+45% времени работы экрана**).
-- Предоставляет **профили приложений**: принудительные 60 Гц для YouTube, VK Видео, RuTube и Кинопоиска (видеоконтент не требует 120 Гц).
-- **100% Приватность**: в приложении **полностью отсутствует разрешение на интернет** (`android.permission.INTERNET`). Приложение физически не способно передавать данные во внешнюю сеть.
+**AdaptiveHz resolves both bottlenecks:**
+- Restores **smooth 120 Hz during Power Saving Mode** in One UI.
+- Dynamically ramps to **120 Hz upon touches and scrolls**, seamlessly downshifting to **60 Hz when reading** (extending screen-on time by up to **+45%**).
+- **Per-App Profiles**: Automatically enforces 60 Hz for video apps (YouTube, streaming services, media players) where 120 Hz wastes energy.
+- **Zero Internet Permissions**: The app does **not** declare `android.permission.INTERNET`. It is physically incapable of transmitting telemetry or user data across the network.
+- **Bilingual Interface**: Native runtime switching between English and Russian in both the app and onboarding wizard.
 
 ---
 
-## 🌟 Ключевые возможности
+## 🌟 Key Features
 
-| Функция | Описание |
+| Feature | Description |
 | :--- | :--- |
-| **🚀 Обход энергосбережения (PSM Bypass)** | Разблокировка 120 Гц при включенной системной экономии энергии Samsung One UI. |
-| **🌱 Динамическая адаптивность** | 120 Гц при любых свайпах, плавный сброс до 60 Гц при покое (таймаут настраивается от 1 до 10 сек). |
-| **🎬 Профили для видео** | Авто-переключение на 60 Гц при открытии YouTube, VK Видео, RuTube, MX Player и браузеров. |
-| **🔋 Умная зарядка** | Постоянные 120 Гц без сбросов, пока смартфон подключен к зарядному устройству. |
-| **🛡️ Защитник низкого заряда** | Автоматическая фиксация 60 Гц при разряде аккумулятора ниже 20%, чтобы не остаться без связи. |
-| **🌡️ Термальная защита** | Временное ограничение до 60 Гц при нагреве батареи выше 41.5°C для предотвращения троттлинга и деградации. |
-| **📊 Индикатор в статус-баре** | Компактный значок частоты `120ᴴᶻ` / `60ᴴᶻ` рядом с системными часами. |
-| **🎛️ Плавающий экранчик (HUD)** | Перемещаемая плашка с текущей частотой поверх окон для наглядного контроля. |
+| **🚀 Power Saving Bypass (PSM)** | Unlock silky 120 Hz even when Samsung One UI Power Saving Mode is activated. |
+| **🌱 Dynamic Touch Adaptivity** | Boosts to 120 Hz on touch/gesture; drops to 60 Hz when idle (timeout customizable from 1 to 10s). |
+| **🎬 Per-App Profiles** | Auto-locks to 60 Hz in video streaming and playback apps where higher refresh rate is unnecessary. |
+| **🔋 Smart Charging Lock** | Locks at 120 Hz continuously while the device is plugged into a charger. |
+| **🛡️ Low Battery Defender** | Automatically locks to 60 Hz system-wide below 20% battery to keep you connected. |
+| **🌡️ Thermal Guard** | Temporarily caps to 60 Hz when battery temp exceeds 41.5°C to prevent throttling and degradation. |
+| **📊 Status Bar Hz Counter** | Ultra-compact live refresh rate badge (`120ᴴᶻ` / `60ᴴᶻ`) next to the system clock. |
+| **🎛️ Movable Floating HUD** | Lightweight floating pill overlay indicating current SurfaceFlinger frame rate. |
 
 ---
 
-## 📲 Быстрый старт и установка
+## 📲 Quick Start & Setup
 
-Для изменения системной частоты обновления экранов Android требует однократного разрешения `WRITE_SECURE_SETTINGS`.
+To manage Android's display refresh rate tables, Android requires a one-time grant of `WRITE_SECURE_SETTINGS`.
 
-### Способ 1: Прямо на смартфоне через Shizuku (Рекомендуется, без ПК)
-*Компьютер не нужен. Настройка занимает 1 минуту по Wi-Fi.*
+### Method 1: On-device via Shizuku (Recommended, No PC needed)
+*No computer required. Takes 1 minute over local Wi-Fi.*
 
-1. Установите [Shizuku из Google Play](https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api).
-2. Откройте Настройки телефона -> «Параметры разработчика» -> включите **«Беспроводная отладка»**. *(Если режим разработчика еще не включен: Настройки -> «Сведения о телефоне» -> «Сведения о ПО» -> 7 раз быстро нажмите на «Номер сборки»).*
-3. В Shizuku нажмите «Сопряжение», введите 6-значный код из шторки уведомлений и запустите службу Shizuku.
-4. Откройте **AdaptiveHz** и нажмите **«Выдать через Shizuku»**. Разрешение получено!
+1. Install [Shizuku from Google Play](https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api).
+2. Go to **Settings** $\rightarrow$ **Developer Options** $\rightarrow$ enable **Wireless Debugging**. *(If Developer Options are hidden: Settings $\rightarrow$ About Phone $\rightarrow$ Software Information $\rightarrow$ tap "Build Number" 7 times).*
+3. In Shizuku, tap **Pairing**, enter the 6-digit pairing code from notifications, and start Shizuku service.
+4. Launch **AdaptiveHz** and tap **"Grant via Shizuku"**. Done!
 
-### Способ 2: Через компьютер по кабелю USB
-1. Включите «Отладку по USB» в «Параметрах разработчика» телефона.
-2. Подключите смартфон к ПК и выполните команду в терминале (CMD / PowerShell / Bash):
+### Method 2: Via PC with USB Cable
+1. Enable **USB Debugging** in **Developer Options**.
+2. Connect your phone to PC and execute in terminal (PowerShell, Command Prompt, or Terminal):
    ```bash
-   adb shell pm grant com.antigravity.adaptivehz android.permission.WRITE_SECURE_SETTINGS
+   adb shell pm grant com.healthcraft.adaptivehz android.permission.WRITE_SECURE_SETTINGS
    ```
-3. Готово! Разрешение сохраняется даже после перезагрузки телефона.
+3. Done! The permission persists across device reboots and app updates.
 
 ---
 
-## 🔄 Обновления приложения
+## 🔄 App Updates
 
-Поскольку AdaptiveHz **не имеет доступа в интернет** (`0 permissions`) ради вашей абсолютной безопасности и приватности, обновления можно получать двумя способами:
+Because AdaptiveHz operates strictly offline (`0 network permissions`) for absolute privacy, you can update it using either of these two methods:
 
-1. **Вручную в 1 клик**: Нажмите **«Проверить обновления на GitHub»** на вкладке *«О телефоне и дисплее»* в самом приложении — откроется официальная [страница релизов](https://github.com/shepard639/AdaptiveHz/releases), где всегда выложен актуальный подписанный APK.
-2. **Автоматически через Obtainium (Рекомендуется)**:
-   Если вы предпочитаете автоматические обновления без магазинов приложений, используйте бесплатный open-source менеджер [Obtainium](https://github.com/ImranR98/Obtainium):
-   - Скопируйте ссылку на этот репозиторий: `https://github.com/shepard639/AdaptiveHz`
-   - Вставьте в Obtainium $\rightarrow$ **Add App**.
-   - Менеджер будет автоматически проверять выход новых версий и обновлять AdaptiveHz в 1 тап.
-
----
-
-## 🛡️ Безопасность и Архитектура
-
-- **Zero Internet Permission**: В манифесте приложения нет сетевых разрешений. Приложение работает на 100% локально и изолированно на вашем устройстве.
-- **IPC Caching**: Контроллер частоты дисплея кэширует состояние в оперативной памяти и не спамит системную базу SQLite, предотвращая микрофризы и сберегая ресурсы процессора.
-- **DisplayListener Sync**: Прямой слушатель аппаратного дисплея Android гарантирует, что виджеты и HUD показывают реальную частоту SurfaceFlinger.
+1. **Manual In-App Link**: Tap **"Check Updates on GitHub"** in the *About* tab of the app — this opens the official [Releases page](https://github.com/shepard639/AdaptiveHz/releases) where signed APKs are published.
+2. **Automated via Obtainium (Recommended)**:
+   For automated background updates without Google Play or app stores, use the open-source update manager [Obtainium](https://github.com/ImranR98/Obtainium):
+   - Copy this repo URL: `https://github.com/shepard639/AdaptiveHz`
+   - Paste into Obtainium $\rightarrow$ **Add App**.
+   - Obtainium will notify and update AdaptiveHz seamlessly.
 
 ---
 
-## 🛠️ Сборка из исходников
+## 🛡️ Security & Architecture
 
-Проект разработан на Kotlin и Jetpack Compose под современные стандарты Android.
+- **Zero Internet Permission**: No network access is requested or possible. 100% offline, local execution.
+- **In-Memory IPC Caching**: The display controller caches mode states to prevent redundant SQLite writes to `system_settings`, eliminating micro-stutters and conserving CPU cycles.
+- **DisplayListener Synchronization**: Directly bound to Android's hardware display manager, ensuring the HUD and status bar reflect authentic SurfaceFlinger refresh rates.
+
+---
+
+## 🛠️ Building from Source
+
+Developed in Kotlin using Jetpack Compose and modern Android architecture.
 
 ```bash
-# Клонирование репозитория
+# Clone repository
 git clone https://github.com/shepard639/AdaptiveHz.git
 cd AdaptiveHz
 
-# Сборка debug APK
+# Build Debug APK
 ./gradlew assembleDebug
 
-# Запуск тестов
+# Execute unit tests
 ./gradlew testDebugUnitTest
 ```
 
 ---
 
-## ⚖️ Правовая информация и отказ от ответственности
+## ⚖️ Legal Disclaimer
 
-- **Товарные знаки**: Samsung, Galaxy и One UI являются зарегистрированными товарными знаками компании Samsung Electronics Co., Ltd. Данный проект является независимой разработкой с открытым исходным кодом, не связан, не спонсируется и не одобряется компанией Samsung.
-- **Отказ от ответственности (Disclaimer of Warranty)**: Приложение предоставляется на условиях «как есть» (AS IS). Разработчики не несут ответственности за возможные сбои в работе операционной системы или сторонних приложений при принудительном изменении частоты развертки.
+- **Trademarks**: Samsung, Galaxy, and One UI are registered trademarks of Samsung Electronics Co., Ltd. This project is an independent open-source development and is not affiliated with, endorsed by, or sponsored by Samsung.
+- **Disclaimer of Warranty**: This application is provided "AS IS", without warranty of any kind. The developers assume no liability for any operating system issues, unexpected behaviors, or third-party app anomalies resulting from forced display refresh rate changes.
 
 ---
 
-## 📄 Лицензия
+## 📄 License
 
-Проект распространяется под открытой лицензией [Apache 2.0](./LICENSE).
+Licensed under the [Apache License, Version 2.0](./LICENSE).
 
 ---
 
 <div align="center">
-  <sub>Создано с заботой об энергии в экосистеме <a href="https://healthcraft.pro/?ref=adaptivehz">HealthCraft</a>.</sub>
+  <sub>Developed by the <b>HealthCraft Team</b> with modern AI-assisted engineering practices.</sub><br>
+  <sub>Crafted with energy mindfulness inside the <a href="https://healthcraft.pro/?ref=adaptivehz">HealthCraft</a> ecosystem.</sub>
 </div>

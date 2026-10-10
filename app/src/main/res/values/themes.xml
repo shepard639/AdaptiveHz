@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.AdaptiveHz" parent="android:Theme.Material.NoActionBar">
+    <style name="Theme.AdaptiveHz" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:statusBarColor">@color/sage_background</item>
         <item name="android:navigationBarColor">@color/sage_background</item>
         <item name="android:windowBackground">@color/sage_background</item>

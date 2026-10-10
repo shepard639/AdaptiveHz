@@ -193,7 +193,57 @@ fun OnboardingScreen(
                 textAlign = TextAlign.Center
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(14.dp))
+
+            // Language Switcher on Welcome Screen (Step 0)
+            if (currentStep == 0) {
+                val currentLang by settingsRepository.appLanguage.collectAsState()
+                Row(
+                    modifier = Modifier.padding(bottom = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    val isRu = currentLang == "ru" || (currentLang == "system" && java.util.Locale.getDefault().language.startsWith("ru"))
+                    val isEn = currentLang == "en" || (currentLang == "system" && !java.util.Locale.getDefault().language.startsWith("ru"))
+
+                    FilterChip(
+                        selected = isRu,
+                        onClick = { settingsRepository.setAppLanguage("ru") },
+                        label = { Text("🇷🇺 Русский", fontSize = 12.sp, fontWeight = if (isRu) FontWeight.Bold else FontWeight.Normal) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = HealthCraftMintContainer,
+                            selectedLabelColor = HealthCraftPrimaryDark,
+                            containerColor = HealthCraftSurface,
+                            labelColor = TextSecondary
+                        ),
+                        border = FilterChipDefaults.filterChipBorder(
+                            enabled = true,
+                            selected = isRu,
+                            borderColor = if (isRu) HealthCraftMintBorder else HealthCraftCardStroke
+                        ),
+                        shape = RoundedCornerShape(10.dp)
+                    )
+                    FilterChip(
+                        selected = isEn,
+                        onClick = { settingsRepository.setAppLanguage("en") },
+                        label = { Text("🇬🇧 English", fontSize = 12.sp, fontWeight = if (isEn) FontWeight.Bold else FontWeight.Normal) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = HealthCraftMintContainer,
+                            selectedLabelColor = HealthCraftPrimaryDark,
+                            containerColor = HealthCraftSurface,
+                            labelColor = TextSecondary
+                        ),
+                        border = FilterChipDefaults.filterChipBorder(
+                            enabled = true,
+                            selected = isEn,
+                            borderColor = if (isEn) HealthCraftMintBorder else HealthCraftCardStroke
+                        ),
+                        shape = RoundedCornerShape(10.dp)
+                    )
+                }
+            } else {
+                Spacer(modifier = Modifier.height(6.dp))
+            }
 
             // Step Content
             AnimatedContent(targetState = currentStep, label = "OnboardingStepAnimation") { step ->
@@ -244,6 +294,7 @@ fun OnboardingScreen(
 // -------------------------------------------------------------------------------------------------
 @Composable
 private fun StepDeviceDiagnostics(refreshRateController: RefreshRateController) {
+    val context = LocalContext.current
     val modes = remember { refreshRateController.getSupportedRefreshRates() }
     val currentHz by refreshRateController.currentRefreshRateHz.collectAsState()
 
@@ -285,11 +336,11 @@ private fun StepDeviceDiagnostics(refreshRateController: RefreshRateController) 
             )
             InfoRow(
                 label = stringResource(R.string.current_hz_label),
-                value = "$currentHz Гц"
+                value = "$currentHz ${stringResource(R.string.hz_unit)}"
             )
             InfoRow(
-                label = "Частоты матрицы:",
-                value = modes.joinToString(", ") { "$it Гц" }
+                label = stringResource(R.string.onboarding_matrix_freq_label),
+                value = modes.joinToString(", ") { "$it ${context.getString(R.string.hz_unit)}" }
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -312,7 +363,7 @@ private fun StepDeviceDiagnostics(refreshRateController: RefreshRateController) 
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Дисплей поддерживает 120 Гц и готов к адаптивной работе",
+                        text = stringResource(R.string.onboarding_display_ready_120),
                         style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
                         color = HealthCraftPrimaryDark
                     )
@@ -352,7 +403,7 @@ private fun StepPermissions(
                             color = HealthCraftPrimaryDark
                         )
                         Text(
-                            text = "Системное разрешение WRITE_SECURE_SETTINGS активно. Переходите к следующему шагу.",
+                            text = stringResource(R.string.onboarding_secure_settings_active_desc),
                             style = MaterialTheme.typography.bodySmall,
                             color = TextSecondary
                         )
@@ -397,7 +448,7 @@ private fun StepPermissions(
                             color = HealthCraftPrimaryDark
                         )
                         Text(
-                            text = "Без компьютера, без проводов, в 1 клик на телефоне",
+                            text = stringResource(R.string.onboarding_shizuku_pill_desc),
                             fontSize = 11.sp,
                             color = TextSecondary
                         )
@@ -465,7 +516,7 @@ private fun StepPermissions(
                             shape = RoundedCornerShape(12.dp),
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text("Разрешить доступ в диалоге Shizuku", color = Color.White, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.onboarding_shizuku_dialog_prompt), color = Color.White, fontWeight = FontWeight.Bold)
                         }
                     }
                     else -> {
@@ -502,7 +553,7 @@ private fun StepPermissions(
                                 modifier = Modifier.weight(1f),
                                 border = BorderStroke(1.dp, HealthCraftMintBorder)
                             ) {
-                                Text("Проверить", color = HealthCraftPrimaryDark, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                Text(stringResource(R.string.btn_check), color = HealthCraftPrimaryDark, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                             }
                         }
                     }
@@ -565,7 +616,7 @@ private fun StepPermissions(
                         shape = RoundedCornerShape(10.dp),
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("Скопировать", fontSize = 12.sp, color = TextPrimary)
+                        Text(stringResource(R.string.btn_copy), fontSize = 12.sp, color = TextPrimary)
                     }
 
                     Button(
@@ -574,7 +625,7 @@ private fun StepPermissions(
                         shape = RoundedCornerShape(10.dp),
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("Проверить", fontSize = 12.sp, color = Color.White)
+                        Text(stringResource(R.string.btn_check), fontSize = 12.sp, color = Color.White)
                     }
                 }
             }
@@ -763,7 +814,7 @@ fun DevModeGuideCard(context: Context) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    val brands = listOf("Samsung", "Xiaomi / MIUI", "Другие")
+                    val brands = listOf("Samsung", "Xiaomi / MIUI", stringResource(R.string.brand_other))
                     brands.forEachIndexed { index, name ->
                         val isSelected = selectedBrandTab == index
                         Surface(
@@ -846,7 +897,7 @@ fun DevModeGuideCard(context: Context) {
                             try {
                                 context.startActivity(Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS))
                             } catch (e: Exception) {
-                                Toast.makeText(context, "Включите режим разработчика (7 нажатий на номер сборки)", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, context.getString(R.string.dev_mode_tap_toast), Toast.LENGTH_LONG).show()
                             }
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = HealthCraftPrimary),
@@ -1160,24 +1211,24 @@ private fun StepModeSelection(
 
         ModeOptionCard(
             mode = OperationMode.ADAPTIVE,
-            title = "⚡ Адаптивный режим (Рекомендуется)",
-            subtitle = "120 Гц при любых касаниях и скролле, плавный переход в 60 Гц через 5 секунд покоя.",
+            title = stringResource(R.string.onboarding_mode_adaptive_title),
+            subtitle = stringResource(R.string.onboarding_mode_adaptive_desc),
             isSelected = selectedMode == OperationMode.ADAPTIVE,
             onClick = { onSelectMode(OperationMode.ADAPTIVE) }
         )
 
         ModeOptionCard(
             mode = OperationMode.ECO,
-            title = "🌱 Эко-режим (Энергосбережение)",
-            subtitle = "120 Гц при касаниях, быстрый сброс до 60 Гц через 1.5 сек. Максимальная автономность (+35% батареи).",
+            title = stringResource(R.string.onboarding_mode_eco_title),
+            subtitle = stringResource(R.string.onboarding_mode_eco_desc),
             isSelected = selectedMode == OperationMode.ECO,
             onClick = { onSelectMode(OperationMode.ECO) }
         )
 
         ModeOptionCard(
             mode = OperationMode.FIXED_120,
-            title = "🚀 Постоянные 120 Гц",
-            subtitle = "Всегда максимальная частота 120 кадров/сек без сбросов.",
+            title = stringResource(R.string.onboarding_mode_120_title),
+            subtitle = stringResource(R.string.onboarding_mode_120_desc),
             isSelected = selectedMode == OperationMode.FIXED_120,
             onClick = { onSelectMode(OperationMode.FIXED_120) }
         )

@@ -32,6 +32,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.antigravity.adaptivehz.R
 import com.antigravity.adaptivehz.core.RefreshRateController
@@ -41,7 +42,7 @@ import com.antigravity.adaptivehz.service.AdaptiveCoordinator
 import com.antigravity.adaptivehz.service.StatusBarIndicatorService
 import com.antigravity.adaptivehz.ui.theme.*
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var controller: RefreshRateController
     private lateinit var repository: SettingsRepository
@@ -249,6 +250,7 @@ fun MainAppScaffold(
                 )
                 NavigationTab.ABOUT -> AboutScreen(
                     controller = controller,
+                    repository = repository,
                     onOpenOnboarding = onOpenOnboarding
                 )
             }
@@ -259,6 +261,7 @@ fun MainAppScaffold(
 @Composable
 fun AboutScreen(
     controller: RefreshRateController,
+    repository: SettingsRepository,
     onOpenOnboarding: () -> Unit
 ) {
     val supportedRates = remember { controller.getSupportedRefreshRates() }
@@ -273,6 +276,13 @@ fun AboutScreen(
     }
 
     val context = LocalContext.current
+    val appVersion = remember {
+        try {
+            "v" + context.packageManager.getPackageInfo(context.packageName, 0).versionName
+        } catch (e: Exception) {
+            "v1.1.0"
+        }
+    }
     val scrollState = rememberScrollState()
 
     Column(
@@ -403,11 +413,85 @@ fun AboutScreen(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Мастер настройки первого запуска",
+                    text = stringResource(R.string.reopen_wizard_btn),
                     fontSize = 13.sp,
                     color = TextPrimary,
                     fontWeight = FontWeight.Medium
                 )
+            }
+        }
+
+        // Language Selector Card
+        val currentLang by repository.appLanguage.collectAsState()
+        HealthCraftCard {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .size(42.dp)
+                        .clip(RoundedCornerShape(13.dp))
+                        .background(MetricMintBg),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.Language,
+                        contentDescription = null,
+                        tint = HealthCraftPrimary,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.width(12.dp))
+                Column {
+                    Text(
+                        text = stringResource(R.string.language_card_title),
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = TextPrimary
+                    )
+                    Text(
+                        text = stringResource(R.string.language_card_desc),
+                        fontSize = 12.sp,
+                        color = TextSecondary
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                val languages = listOf(
+                    "ru" to "🇷🇺 Русский",
+                    "en" to "🇬🇧 English",
+                    "system" to stringResource(R.string.language_system)
+                )
+                languages.forEach { (code, label) ->
+                    val isSelected = currentLang == code
+                    FilterChip(
+                        selected = isSelected,
+                        onClick = { repository.setAppLanguage(code) },
+                        label = {
+                            Text(
+                                text = label,
+                                fontSize = 12.sp,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                            )
+                        },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = HealthCraftMintContainer,
+                            selectedLabelColor = HealthCraftPrimaryDark,
+                            containerColor = HealthCraftBg,
+                            labelColor = TextSecondary
+                        ),
+                        border = FilterChipDefaults.filterChipBorder(
+                            enabled = true,
+                            selected = isSelected,
+                            borderColor = if (isSelected) HealthCraftMintBorder else HealthCraftCardStroke
+                        ),
+                        shape = RoundedCornerShape(10.dp)
+                    )
+                }
             }
         }
 
@@ -437,7 +521,7 @@ fun AboutScreen(
                         color = TextPrimary
                     )
                     Text(
-                        text = stringResource(R.string.updates_card_version, "v1.0.0"),
+                        text = stringResource(R.string.updates_card_version, appVersion),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
                         color = TextSecondary
