@@ -1,4 +1,4 @@
-﻿package com.healthcraft.adaptivehz.ui
+package com.healthcraft.adaptivehz.ui
 
 import android.Manifest
 import android.content.Intent
@@ -282,7 +282,7 @@ fun AboutScreen(
         try {
             "v" + context.packageManager.getPackageInfo(context.packageName, 0).versionName
         } catch (e: Exception) {
-            "v1.1.0"
+            "v1.2.0"
         }
     }
     val scrollState = rememberScrollState()
