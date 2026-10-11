@@ -117,7 +117,7 @@ class StatusBarIndicatorService : Service() {
             .build()
     }
 
-    private val iconCache = mutableMapOf<Int, Bitmap>()
+    private val iconCache = java.util.concurrent.ConcurrentHashMap<Int, Bitmap>()
 
     /**
      * Creates a high-contrast numeric bitmap with an upper-right "Hz" index (e.g. 60ᴴᶻ / 120ᴴᶻ)

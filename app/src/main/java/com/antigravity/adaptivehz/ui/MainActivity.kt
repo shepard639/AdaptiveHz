@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
     private val requestNotificationPermission = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
-        if (isGranted) {
+        if (isGranted && repository.isStatusBarIndicatorEnabled.value) {
             StatusBarIndicatorService.start(this)
         }
     }
@@ -61,15 +61,17 @@ class MainActivity : AppCompatActivity() {
         controller = RefreshRateController.getInstance(this)
         repository = SettingsRepository(this)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) !=
-                PackageManager.PERMISSION_GRANTED) {
-                requestNotificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+        if (repository.isStatusBarIndicatorEnabled.value) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                    requestNotificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+                } else {
+                    StatusBarIndicatorService.start(this)
+                }
             } else {
                 StatusBarIndicatorService.start(this)
             }
-        } else {
-            StatusBarIndicatorService.start(this)
         }
 
         setContent {

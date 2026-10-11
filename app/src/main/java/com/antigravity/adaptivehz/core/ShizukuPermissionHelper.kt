@@ -90,10 +90,10 @@ object ShizukuPermissionHelper {
             Log.d(TAG, "Executing command via Shizuku: $cmd")
 
             val process = executeShizukuProcess(cmd)
-            val finished = process.waitFor(5, java.util.concurrent.TimeUnit.SECONDS)
+            val finished = process.waitFor(10, java.util.concurrent.TimeUnit.SECONDS)
             if (!finished) {
                 process.destroyForcibly()
-                return@withContext Result.failure(java.util.concurrent.TimeoutException("Shizuku command timed out after 5 seconds"))
+                return@withContext Result.failure(java.util.concurrent.TimeoutException("Shizuku command timed out after 10 seconds"))
             }
             val exitCode = process.exitValue()
 

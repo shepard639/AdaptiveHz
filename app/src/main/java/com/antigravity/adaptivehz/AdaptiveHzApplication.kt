@@ -3,6 +3,8 @@ package com.antigravity.adaptivehz
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import com.antigravity.adaptivehz.core.LanguageHelper
+import com.antigravity.adaptivehz.data.SettingsRepository
 import com.antigravity.adaptivehz.service.NotificationChannels
 
 class AdaptiveHzApplication : Application() {
@@ -10,6 +12,15 @@ class AdaptiveHzApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannels()
+        initAppLanguage()
+    }
+
+    private fun initAppLanguage() {
+        val repository = SettingsRepository.getInstance(this)
+        val savedLang = repository.appLanguage.value
+        if (savedLang.isNotEmpty() && savedLang != LanguageHelper.LANG_SYSTEM) {
+            LanguageHelper.setLanguage(savedLang)
+        }
     }
 
     private fun createNotificationChannels() {

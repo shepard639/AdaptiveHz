@@ -1,5 +1,6 @@
 package com.antigravity.adaptivehz.service
 
+import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.drawable.Icon
 import android.os.Build
@@ -8,6 +9,7 @@ import android.service.quicksettings.TileService
 import androidx.annotation.RequiresApi
 import com.antigravity.adaptivehz.R
 import com.antigravity.adaptivehz.core.RefreshRateController
+import com.antigravity.adaptivehz.data.OperationMode
 import com.antigravity.adaptivehz.data.SettingsRepository
 
 @RequiresApi(Build.VERSION_CODES.N)
@@ -39,29 +41,40 @@ class AdaptiveTileService : TileService() {
                 val intent = Intent(this, com.antigravity.adaptivehz.ui.MainActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 }
-                startActivityAndCollapse(intent)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    val pendingIntent = PendingIntent.getActivity(
+                        this,
+                        0,
+                        intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                    )
+                    startActivityAndCollapse(pendingIntent)
+                } else {
+                    @Suppress("DEPRECATION")
+                    startActivityAndCollapse(intent)
+                }
             }
             return
         }
 
         // Cycle: Adaptive -> Force 60 -> Force 120 -> Adaptive
-        val isAdaptive = repository.isAdaptiveEnabled.value
-        val currentHz = controller.currentRefreshRateHz.value
+        val currentMode = repository.operationMode.value
 
-        when {
-            isAdaptive -> {
+        when (currentMode) {
+            OperationMode.ADAPTIVE,
+            OperationMode.ECO -> {
                 // Switch to fixed 60Hz
-                repository.setAdaptiveEnabled(false)
-                controller.dropToLow(60)
+                repository.setOperationMode(OperationMode.FIXED_60)
+                controller.setFixed60()
             }
-            currentHz <= 60 -> {
+            OperationMode.FIXED_60 -> {
                 // Switch to fixed 120Hz
-                repository.setAdaptiveEnabled(false)
-                controller.boostToHigh(120)
+                repository.setOperationMode(OperationMode.FIXED_120)
+                controller.setFixed120()
             }
-            else -> {
+            OperationMode.FIXED_120 -> {
                 // Switch back to Adaptive
-                repository.setAdaptiveEnabled(true)
+                repository.setOperationMode(OperationMode.ADAPTIVE)
                 AdaptiveCoordinator.notifyUserInteraction()
             }
         }
@@ -72,20 +85,31 @@ class AdaptiveTileService : TileService() {
     private fun updateTileState() {
         val tile = qsTile ?: return
 
-        val isAdaptive = repository.isAdaptiveEnabled.value
+        val currentMode = repository.operationMode.value
         val currentHz = controller.currentRefreshRateHz.value
 
-        if (isAdaptive) {
-            tile.state = Tile.STATE_ACTIVE
-            tile.label = getString(R.string.tile_label)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                tile.subtitle = getString(R.string.tile_subtitle_adaptive, currentHz)
+        when (currentMode) {
+            OperationMode.ADAPTIVE,
+            OperationMode.ECO -> {
+                tile.state = Tile.STATE_ACTIVE
+                tile.label = getString(R.string.tile_label)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    tile.subtitle = getString(R.string.tile_subtitle_adaptive, currentHz)
+                }
             }
-        } else {
-            tile.state = Tile.STATE_INACTIVE
-            tile.label = getString(R.string.tile_label)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                tile.subtitle = getString(R.string.tile_subtitle_fixed, currentHz)
+            OperationMode.FIXED_120 -> {
+                tile.state = Tile.STATE_ACTIVE
+                tile.label = getString(R.string.tile_label)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    tile.subtitle = getString(R.string.tile_subtitle_fixed, currentHz)
+                }
+            }
+            OperationMode.FIXED_60 -> {
+                tile.state = Tile.STATE_INACTIVE
+                tile.label = getString(R.string.tile_label)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    tile.subtitle = getString(R.string.tile_subtitle_fixed, currentHz)
+                }
             }
         }
 
