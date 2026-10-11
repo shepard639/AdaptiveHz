@@ -9,12 +9,28 @@ param(
         }
     ),
     [string]$KeyAlias = "adaptivehz",
-    [string]$KeystorePath = "adaptivehz-release.keystore"
+    [string]$KeystorePath = "adaptivehz-release.keystore",
+    [switch]$ExportBase64Secret
 )
 
 $ErrorActionPreference = "Stop"
 $ProjectRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 Set-Location $ProjectRoot
+
+if ($ExportBase64Secret) {
+    $fullKeystorePath = Join-Path $ProjectRoot $KeystorePath
+    if (-not (Test-Path $fullKeystorePath)) {
+        Write-Error "Keystore not found at $fullKeystorePath"
+    }
+    $bytes = [System.IO.File]::ReadAllBytes($fullKeystorePath)
+    $base64 = [Convert]::ToBase64String($bytes)
+    Write-Host "`n=== GITHUB ACTIONS RELEASE KEYSTORE BASE64 ===" -ForegroundColor Cyan
+    Write-Host "Add this as secret 'RELEASE_KEYSTORE_BASE64' in GitHub Settings -> Secrets -> Actions:`n" -ForegroundColor Yellow
+    [System.Console]::WriteLine($base64)
+    Write-Host "`nAdd 'KEYSTORE_PASSWORD' with your release keystore password." -ForegroundColor Yellow
+    Write-Host "==============================================`n" -ForegroundColor Cyan
+    return
+}
 
 Write-Host "=========================================" -ForegroundColor Cyan
 Write-Host "  AdaptiveHz - Release APK Build Script  " -ForegroundColor Cyan
