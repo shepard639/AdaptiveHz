@@ -66,7 +66,7 @@ if errorlevel 1 (
 echo.
 
 echo [4/4] Запуск AdaptiveHz на телефоне...
-%ADB% shell am start -n com.healthcraft.adaptivehz/com.antigravity.adaptivehz.ui.MainActivity >nul 2>&1
+%ADB% shell am start -n com.healthcraft.adaptivehz/.ui.MainActivity >nul 2>&1
 echo.
 echo =====================================================================
 echo                     УСТАНОВКА ЗАВЕРШЕНА УСПЕШНО!

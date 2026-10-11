@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.antigravity.adaptivehz"
+    namespace = "com.healthcraft.adaptivehz"
     compileSdk = 35
 
     defaultConfig {

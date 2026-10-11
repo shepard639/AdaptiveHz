@@ -38,7 +38,7 @@ Write-Host "`n[3/4] Выдача системного разрешения WRITE
 Write-Host "[OK] Системное разрешение WRITE_SECURE_SETTINGS выдано!" -ForegroundColor Green
 
 Write-Host "`n[4/4] Запуск AdaptiveHz..." -ForegroundColor Yellow
-& $adbPath shell am start -n com.healthcraft.adaptivehz/com.antigravity.adaptivehz.ui.MainActivity
+& $adbPath shell am start -n com.healthcraft.adaptivehz/.ui.MainActivity
 
 Write-Host "`n=====================================================================" -ForegroundColor Cyan
 Write-Host "                    УСТАНОВКА ЗАВЕРШЕНА УСПЕШНО!                     " -ForegroundColor Green
