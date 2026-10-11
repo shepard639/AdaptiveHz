@@ -3,6 +3,7 @@
 # Keep data models and enums
 -keep class com.antigravity.adaptivehz.data.** { *; }
 -keep class com.antigravity.adaptivehz.core.DisplayModeInfo { *; }
+-keep class com.antigravity.adaptivehz.core.RefreshRateModeResolver { *; }
 -keepclassmembers enum * {
     public static **[] values();
     public static ** valueOf(java.lang.String);

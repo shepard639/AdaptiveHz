@@ -19,12 +19,12 @@ class SamsungDeviceProfileTest {
             MockDisplayMode(1, 60.0f),
             MockDisplayMode(2, 120.0f)
         )
-        val rates = nonLtpoModes.map { it.refreshRate.toInt() }.distinct().sorted()
+        val rates = RefreshRateModeResolver.normalizeFrequencies(nonLtpoModes.map { it.refreshRate })
         assertEquals(listOf(60, 120), rates)
 
-        // For non-LTPO, target refresh rates must be clamped to supported hardware steps
-        val targetHz = 120
-        assertTrue(rates.contains(targetHz))
+        // Target refresh rates must match supported hardware steps
+        val clamped = RefreshRateModeResolver.clampTargetHz(120, rates)
+        assertEquals(120, clamped)
     }
 
     /**
@@ -40,43 +40,53 @@ class SamsungDeviceProfileTest {
             MockDisplayMode(5, 96.0f),
             MockDisplayMode(6, 120.0f)
         )
-        val rates = ltpoModes.map { it.refreshRate.toInt() }.distinct().sorted()
+        val rates = RefreshRateModeResolver.normalizeFrequencies(ltpoModes.map { it.refreshRate })
         assertTrue(rates.contains(60))
         assertTrue(rates.contains(120))
         assertEquals(6, rates.size)
+        assertEquals(listOf(24, 30, 48, 60, 96, 120), rates)
     }
 
     /**
-     * Tests Samsung Foldable model name detection.
+     * Tests Samsung Foldable model name and hinge sensor detection directly via production RefreshRateModeResolver.
      */
     @Test
-    fun testFoldableDetectionFromModel() {
-        fun isFoldableModel(model: String): Boolean {
-            return model.contains("Fold", ignoreCase = true) || model.contains("Flip", ignoreCase = true)
-        }
+    fun testFoldableDetectionFromModelAndSensors() {
+        // Model string detection
+        assertTrue(RefreshRateModeResolver.isFoldableDevice("Galaxy Z Fold 5"))
+        assertTrue(RefreshRateModeResolver.isFoldableDevice("Galaxy Z Fold 6"))
+        assertTrue(RefreshRateModeResolver.isFoldableDevice("Galaxy Z Flip 5"))
+        assertTrue(RefreshRateModeResolver.isFoldableDevice("SM-F946B (Z Fold 5)"))
+        assertTrue(RefreshRateModeResolver.isFoldableDevice("SM-F731B"))
 
-        assertTrue(isFoldableModel("Galaxy Z Fold 5"))
-        assertTrue(isFoldableModel("Galaxy Z Fold 6"))
-        assertTrue(isFoldableModel("Galaxy Z Flip 5"))
-        assertTrue(isFoldableModel("SM-F946B (Z Fold 5)"))
-        assertFalse(isFoldableModel("Galaxy S20 FE"))
-        assertFalse(isFoldableModel("Galaxy S24 Ultra"))
-        assertFalse(isFoldableModel("Galaxy S26"))
-        assertFalse(isFoldableModel("Galaxy A55"))
+        // Non-foldable models
+        assertFalse(RefreshRateModeResolver.isFoldableDevice("Galaxy S20 FE"))
+        assertFalse(RefreshRateModeResolver.isFoldableDevice("Galaxy S24 Ultra"))
+        assertFalse(RefreshRateModeResolver.isFoldableDevice("Galaxy S26"))
+        assertFalse(RefreshRateModeResolver.isFoldableDevice("Galaxy A55"))
+        assertFalse(RefreshRateModeResolver.isFoldableDevice(""))
+
+        // Hinge sensor presence overrides model name
+        assertTrue(RefreshRateModeResolver.isFoldableDevice("Generic Device", hasHingeSensor = true))
     }
 
     /**
-     * Tests power saving mode (PSM) bypass frequency bounds.
+     * Tests power saving mode (PSM) bypass frequency bounds via production resolver.
      */
     @Test
     fun testPsmBypassFrequencyBounds() {
-        // In PSM bypass mode, peak and min refresh rates should lock to 120Hz
-        val highHz = 120
-        val peakFloat = highHz.toFloat()
-        val minFloat = highHz.toFloat()
+        val (peak, min) = RefreshRateModeResolver.calculatePsmBypassParameters(120)
+        assertEquals(120.0f, peak, 0.01f)
+        assertEquals(120.0f, min, 0.01f)
 
-        assertEquals(120.0f, peakFloat, 0.01f)
-        assertEquals(120.0f, minFloat, 0.01f)
+        val (peak96, min96) = RefreshRateModeResolver.calculatePsmBypassParameters(96)
+        assertEquals(96.0f, peak96, 0.01f)
+        assertEquals(96.0f, min96, 0.01f)
+
+        // Invalid input fallback
+        val (peakDefault, minDefault) = RefreshRateModeResolver.calculatePsmBypassParameters(0)
+        assertEquals(120.0f, peakDefault, 0.01f)
+        assertEquals(120.0f, minDefault, 0.01f)
     }
 
     /**

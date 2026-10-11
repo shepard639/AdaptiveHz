@@ -10,48 +10,57 @@ class RefreshRateLogicTest {
     @Test
     fun testTargetHzSelectionLogic() {
         // High refresh rate should select Samsung high mode (1), low should select 0
-        fun getSamsungMode(targetHz: Int): Int {
-            return if (targetHz <= 60) 0 else 1
-        }
-
-        assertEquals(0, getSamsungMode(60))
-        assertEquals(0, getSamsungMode(48))
-        assertEquals(1, getSamsungMode(96))
-        assertEquals(1, getSamsungMode(120))
+        assertEquals(RefreshRateModeResolver.SAMSUNG_MODE_STANDARD, RefreshRateModeResolver.resolveSamsungMode(60))
+        assertEquals(RefreshRateModeResolver.SAMSUNG_MODE_STANDARD, RefreshRateModeResolver.resolveSamsungMode(48))
+        assertEquals(RefreshRateModeResolver.SAMSUNG_MODE_STANDARD, RefreshRateModeResolver.resolveSamsungMode(30))
+        assertEquals(RefreshRateModeResolver.SAMSUNG_MODE_HIGH, RefreshRateModeResolver.resolveSamsungMode(96))
+        assertEquals(RefreshRateModeResolver.SAMSUNG_MODE_HIGH, RefreshRateModeResolver.resolveSamsungMode(120))
+        assertEquals(RefreshRateModeResolver.SAMSUNG_MODE_HIGH, RefreshRateModeResolver.resolveSamsungMode(144))
     }
 
     @Test
-    fun testRefreshRateStateUpdateRules() {
-        // Verifies the audit fix: _currentRefreshRateHz must only update on success
-        var currentHz = 60
-
-        fun applyRefreshRate(targetHz: Int, success: Boolean): Boolean {
-            if (success) {
-                currentHz = targetHz
-            }
-            return success
-        }
-
-        // 1. Success case
-        val res1 = applyRefreshRate(120, success = true)
-        assertTrue(res1)
-        assertEquals(120, currentHz)
-
-        // 2. Failure case (permission missing or system failure)
-        val res2 = applyRefreshRate(60, success = false)
-        assertFalse(res2)
-        // Rate must NOT change on failure
-        assertEquals(120, currentHz)
+    fun testResolveHzFromSamsungMode() {
+        assertEquals(60, RefreshRateModeResolver.resolveHzFromSamsungMode(RefreshRateModeResolver.SAMSUNG_MODE_STANDARD))
+        assertEquals(120, RefreshRateModeResolver.resolveHzFromSamsungMode(RefreshRateModeResolver.SAMSUNG_MODE_HIGH))
+        assertEquals(120, RefreshRateModeResolver.resolveHzFromSamsungMode(-1, fallbackHz = 120))
+        assertEquals(60, RefreshRateModeResolver.resolveHzFromSamsungMode(999, fallbackHz = 60))
     }
 
     @Test
-    fun testSupportedModesFiltering() {
-        val rawFrequencies = listOf(60.0001f, 120.0004f, 60.0f, 96.0f, 120.0f)
-        val distinctHz = rawFrequencies
-            .map { Math.round(it) }
-            .distinct()
-            .sorted()
+    fun testSupportedModesFilteringAndNormalization() {
+        val rawFrequencies = listOf(60.0001f, 120.0004f, 60.0f, 96.0f, 120.0f, -1.0f, 0f)
+        val distinctHz = RefreshRateModeResolver.normalizeFrequencies(rawFrequencies)
 
         assertEquals(listOf(60, 96, 120), distinctHz)
+    }
+
+    @Test
+    fun testEmptyFrequenciesFallback() {
+        val fallback = RefreshRateModeResolver.normalizeFrequencies(emptyList())
+        assertEquals(listOf(60, 120), fallback)
+    }
+
+    @Test
+    fun testClampTargetHz() {
+        val supported = listOf(60, 96, 120)
+        assertEquals(120, RefreshRateModeResolver.clampTargetHz(120, supported))
+        assertEquals(96, RefreshRateModeResolver.clampTargetHz(96, supported))
+        assertEquals(60, RefreshRateModeResolver.clampTargetHz(60, supported))
+        // Closest match for unsupported 90Hz -> 96Hz
+        assertEquals(96, RefreshRateModeResolver.clampTargetHz(90, supported))
+        // Closest match for unsupported 50Hz -> 60Hz
+        assertEquals(60, RefreshRateModeResolver.clampTargetHz(50, supported))
+        // Empty supported rates fallback
+        assertEquals(120, RefreshRateModeResolver.clampTargetHz(120, emptyList(), fallback = 120))
+    }
+
+    @Test
+    fun testHighRefreshRateClassification() {
+        assertFalse(RefreshRateModeResolver.isHighRefreshRate(60))
+        assertFalse(RefreshRateModeResolver.isHighRefreshRate(48))
+        assertTrue(RefreshRateModeResolver.isHighRefreshRate(90))
+        assertTrue(RefreshRateModeResolver.isHighRefreshRate(96))
+        assertTrue(RefreshRateModeResolver.isHighRefreshRate(120))
+        assertTrue(RefreshRateModeResolver.isHighRefreshRate(144))
     }
 }

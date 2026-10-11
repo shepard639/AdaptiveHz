@@ -117,7 +117,7 @@ class RefreshRateController private constructor(private val appContext: Context)
 
         // 1. Samsung One UI refresh_rate_mode in Settings.Secure (0 = 60Hz, 1 = 120Hz)
         try {
-            val samsungMode = if (targetHz <= 60) SAMSUNG_MODE_STANDARD else SAMSUNG_MODE_HIGH
+            val samsungMode = RefreshRateModeResolver.resolveSamsungMode(targetHz)
             Settings.Secure.putInt(contentResolver, KEY_SAMSUNG_REFRESH_RATE_MODE, samsungMode)
             Log.d(TAG, "Successfully set Settings.Secure refresh_rate_mode to $samsungMode")
 
@@ -182,8 +182,7 @@ class RefreshRateController private constructor(private val appContext: Context)
             if (rate != null && rate > 0) return rate
 
             val samsungMode = Settings.Secure.getInt(contentResolver, KEY_SAMSUNG_REFRESH_RATE_MODE, -1)
-            if (samsungMode == SAMSUNG_MODE_STANDARD) return 60
-            if (samsungMode == SAMSUNG_MODE_HIGH) return 120
+            return RefreshRateModeResolver.resolveHzFromSamsungMode(samsungMode, 120)
         } catch (e: Exception) {
             Log.w(TAG, "Error reading hardware refresh rate: ${e.message}")
         }
@@ -207,17 +206,17 @@ class RefreshRateController private constructor(private val appContext: Context)
     }
 
     fun bypassPowerSaving120Hz(targetHz: Int = 120): Boolean {
-        return setRefreshRate(targetHz = targetHz, minHz = targetHz, force = true)
+        val (peak, min) = RefreshRateModeResolver.calculatePsmBypassParameters(targetHz)
+        return setRefreshRate(targetHz = peak.toInt(), minHz = min.toInt(), force = true)
     }
 
     fun isSamsungFoldable(): Boolean {
-        return try {
-            appContext.packageManager.hasSystemFeature("android.hardware.sensor.hinge_angle") ||
-                    android.os.Build.MODEL.contains("Fold", ignoreCase = true) ||
-                    android.os.Build.MODEL.contains("Flip", ignoreCase = true)
+        val hasHinge = try {
+            appContext.packageManager.hasSystemFeature("android.hardware.sensor.hinge_angle")
         } catch (e: Exception) {
             false
         }
+        return RefreshRateModeResolver.isFoldableDevice(android.os.Build.MODEL, hasHinge)
     }
 
     companion object {
@@ -228,8 +227,8 @@ class RefreshRateController private constructor(private val appContext: Context)
         const val KEY_SAMSUNG_REFRESH_RATE_MODE = "refresh_rate_mode"
         const val KEY_SAMSUNG_SUB_REFRESH_RATE_MODE = "sub_refresh_rate_mode"
 
-        const val SAMSUNG_MODE_STANDARD = 0 // 60Hz
-        const val SAMSUNG_MODE_HIGH = 1     // 120Hz
+        const val SAMSUNG_MODE_STANDARD = RefreshRateModeResolver.SAMSUNG_MODE_STANDARD // 0 (60Hz)
+        const val SAMSUNG_MODE_HIGH = RefreshRateModeResolver.SAMSUNG_MODE_HIGH         // 1 (120Hz)
 
         @Volatile
         private var instance: RefreshRateController? = null
