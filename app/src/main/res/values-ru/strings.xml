@@ -165,6 +165,7 @@
     <string name="onboarding_shizuku_not_running">Сервис Shizuku не активен. Запустите его или настройте через ПК.</string>
     <string name="onboarding_adb_option_title">Через компьютер по USB</string>
     <string name="onboarding_adb_option_desc">Подключите смартфон к ПК и выполните команду в командной строке:</string>
+    <string name="onboarding_xiaomi_security_warning">Особенность Xiaomi / HyperOS / MIUI: обязательно включите «Отладка по USB (Настройки безопасности)» с авторизацией через Mi Аккаунт, иначе запись параметров экрана будет заблокирована.</string>
     <string name="onboarding_permission_granted_badge">Разрешение получено</string>
     <string name="onboarding_step_3_title">3. Отслеживание касаний</string>
     <string name="onboarding_step_3_desc">Служба специальных возможностей нужна для включения 120 Гц при касаниях и сброса до 60 Гц при чтении.</string>
@@ -284,4 +285,60 @@
     <string name="onboarding_mode_120_title">🚀 Постоянные 120 Гц</string>
     <string name="onboarding_mode_120_desc">Всегда максимальная частота 120 кадров/сек без сбросов.</string>
     <string name="badge_current">ТЕКУЩАЯ</string>
+
+    <!-- Navigation Audit -->
+    <string name="nav_audit">Аудит</string>
+
+    <!-- Compatibility Audit Screen -->
+    <string name="audit_screen_title">Аудит совместимости устройств</string>
+    <string name="audit_screen_subtitle">Независимый анализ прошивок Samsung One UI, типов матриц и системных ограничений</string>
+    <string name="audit_compatibility_index">ИНДЕКС СОВМЕСТИМОСТИ</string>
+    <string name="audit_active_device">АКТИВНОЕ УСТРОЙСТВО</string>
+    <string name="audit_score_optimal">Идеальная (Non-LTPO)</string>
+    <string name="audit_score_ltpo">Частичная (LTPO VRR)</string>
+    <string name="audit_score_vendor">Требуется авторизация</string>
+    <string name="audit_ltpo_warning_title">Особенность матрицы LTPO VRR</string>
+    <string name="audit_ltpo_warning_text">На смартфонах Galaxy с LTPO (S23/S24 Ultra) матрица сама снижает частоту до 1-24 Гц на статике. Принудительная фиксация 120 Гц отключает штатное аппаратное снижение. AdaptiveHz рекомендуется использовать для обхода 60 Гц в режиме энергосбережения One UI.</string>
+    <string name="audit_90hz_title">Аппаратное ограничение: 90 Гц</string>
+    <string name="audit_90hz_text">Для моделей Galaxy A52/A72 пиковая частота автоматически ограничена на 90 Гц во избежание сбоя контроллера дисплея.</string>
+    <string name="audit_foldable_title">Складной смартфон (Galaxy Z Fold / Flip)</string>
+    <string name="audit_foldable_text">Внешний экран Cover Screen синхронизируется через отдельный системный ключ sub_refresh_rate_mode.</string>
+    <string name="audit_high_target_title">Целевая высокая частота (High Target):</string>
+    <string name="audit_restricted_settings_title">Ограниченные настройки Android 13+</string>
+    <string name="audit_restricted_settings_desc">Если переключатель службы доступности серый, откройте Сведения о приложении -> меню 3 точек -> «Разрешить ограниченные настройки».</string>
+    <string name="audit_tab_checklist">Чек-лист</string>
+    <string name="audit_tab_presets">Пресеты</string>
+    <string name="audit_tab_report">Отчет</string>
+    <string name="audit_btn_copy_report">Копировать отчет</string>
+    <string name="audit_report_copied">Отчет скопирован в буфер обмена</string>
+
+    <!-- Audit Checklist Items -->
+    <string name="audit_check_ltpo_title">Тип панели: Fixed AMOLED vs LTPO VRR</string>
+    <string name="audit_check_ltpo_finding">На смартфонах без LTPO (S20, S20 FE, S21, A52, A54) One UI не снижает герцовку на статике при 120 Гц. Наше адаптивное переключение дает экономию до +45%. На флагманах с LTPO принудительная фиксация 120 Гц отключает аппаратный VRR.</string>
+    <string name="audit_check_ltpo_solution">Внедрено: Автоматическое определение типа матрицы. Для LTPO выводится предупреждение, предотвращающее избыточный разряд.</string>
+
+    <string name="audit_check_peak_title">Максимальная частота экрана (90 / 96 / 120 Гц)</string>
+    <string name="audit_check_peak_finding">Модели Galaxy A52/A72 поддерживают максимум 90 Гц. Попытка выставить 120 Гц вызывает сброс дисплея на 60 Гц. Модели Galaxy S20 поддерживают скрытый режим 96 Гц.</string>
+    <string name="audit_check_peak_solution">Внедрено: Динамический селектор High Target (90, 96, 120 Гц) с аппаратным ограничением по Display.supportedModes.</string>
+
+    <string name="audit_check_foldable_title">Два экрана складных устройств (Galaxy Z Fold / Flip)</string>
+    <string name="audit_check_foldable_finding">Внешний и внутренний экраны управляются разными системными ключами (refresh_rate_mode и sub_refresh_rate_mode).</string>
+    <string name="audit_check_foldable_solution">Внедрено: Синхронная запись в sub_refresh_rate_mode при смене состояний экрана.</string>
+
+    <string name="audit_check_restricted_title">Ограниченные настройки Android 13+ (Sideload APK)</string>
+    <string name="audit_check_restricted_finding">При ручной установке APK вне Google Play Android автоматически блокирует службу доступности (переключатель серый).</string>
+    <string name="audit_check_restricted_solution">Внедрено: Интерактивный гайд: Сведения о приложении -> меню 3 точек -> «Разрешить ограниченные настройки».</string>
+
+    <string name="audit_check_psm_title">Обход 60 Гц в режиме энергосбережения One UI 2.5–6.1+</string>
+    <string name="audit_check_psm_finding">В One UI 6.0/6.1 процесс DisplayPowerController сбрасывает частоту в 60 Гц при переключении энергосбережения.</string>
+    <string name="audit_check_psm_solution">Внедрено: Реактивный слушатель ACTION_POWER_SAVE_MODE_CHANGED с отложенным anti-watchdog повтором.</string>
+
+    <string name="audit_check_deepsleep_title">Samsung Device Care: Выгрузка в «Глубокий сон»</string>
+    <string name="audit_check_deepsleep_finding">Служба com.samsung.android.lool выгружает приложения в глубокий сон через 72 часа неактивности.</string>
+    <string name="audit_check_deepsleep_solution">Внедрено: Запрос исключения из оптимизации батареи и постоянный индикатор в статус-баре.</string>
+
+    <string name="audit_check_xiaomi_title">Специфика сторонних вендоров (Xiaomi HyperOS / MIUI)</string>
+    <string name="audit_check_xiaomi_finding">В HyperOS и MIUI одного флага «Отладка по USB» недостаточно. Требуется включить «Отладка по USB (Настройки безопасности)».</string>
+    <string name="audit_check_xiaomi_solution">Внедрено: Предупреждение и инструкция для пользователей Xiaomi / Redmi / POCO.</string>
 </resources>
+

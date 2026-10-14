@@ -1,4 +1,4 @@
-﻿package com.healthcraft.adaptivehz.core
+package com.healthcraft.adaptivehz.core
 
 import android.content.Context
 import android.content.pm.PackageManager
@@ -64,8 +64,9 @@ class RefreshRateController private constructor(private val appContext: Context)
             DisplayModeInfo(2, 1080, 2400, 120, 120.0f)
         )
 
-        return display.supportedModes
-            .map { mode ->
+        val list = mutableListOf<DisplayModeInfo>()
+        for (mode in display.supportedModes) {
+            list.add(
                 DisplayModeInfo(
                     modeId = mode.modeId,
                     width = mode.physicalWidth,
@@ -73,9 +74,23 @@ class RefreshRateController private constructor(private val appContext: Context)
                     refreshRateHz = mode.refreshRate.roundToInt(),
                     exactRefreshRate = mode.refreshRate
                 )
+            )
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                for (altRate in mode.alternativeRefreshRates) {
+                    list.add(
+                        DisplayModeInfo(
+                            modeId = mode.modeId,
+                            width = mode.physicalWidth,
+                            height = mode.physicalHeight,
+                            refreshRateHz = altRate.roundToInt(),
+                            exactRefreshRate = altRate
+                        )
+                    )
+                }
             }
-            .distinctBy { it.refreshRateHz }
-            .sortedBy { it.refreshRateHz }
+        }
+
+        return list.distinctBy { it.refreshRateHz }.sortedBy { it.refreshRateHz }
     }
 
     /**
@@ -198,15 +213,18 @@ class RefreshRateController private constructor(private val appContext: Context)
     }
 
     fun boostToHigh(highHz: Int = 120, force: Boolean = false): Boolean {
-        return setRefreshRate(targetHz = highHz, minHz = highHz, force = force)
+        val safeHz = RefreshRateModeResolver.clampTargetHz(highHz, getSupportedRefreshRates(), fallback = 120)
+        return setRefreshRate(targetHz = safeHz, minHz = safeHz, force = force)
     }
 
     fun dropToLow(lowHz: Int = 60, force: Boolean = false): Boolean {
-        return setRefreshRate(targetHz = lowHz, minHz = lowHz, force = force)
+        val safeHz = RefreshRateModeResolver.clampTargetHz(lowHz, getSupportedRefreshRates(), fallback = 60)
+        return setRefreshRate(targetHz = safeHz, minHz = safeHz, force = force)
     }
 
     fun bypassPowerSaving120Hz(targetHz: Int = 120): Boolean {
-        val (peak, min) = RefreshRateModeResolver.calculatePsmBypassParameters(targetHz)
+        val safeHz = RefreshRateModeResolver.clampTargetHz(targetHz, getSupportedRefreshRates(), fallback = 120)
+        val (peak, min) = RefreshRateModeResolver.calculatePsmBypassParameters(safeHz)
         return setRefreshRate(targetHz = peak.toInt(), minHz = min.toInt(), force = true)
     }
 
@@ -217,6 +235,21 @@ class RefreshRateController private constructor(private val appContext: Context)
             false
         }
         return RefreshRateModeResolver.isFoldableDevice(android.os.Build.MODEL, hasHinge)
+    }
+
+    fun isLtpoPanel(): Boolean {
+        return RefreshRateModeResolver.isLtpoDevice(
+            model = android.os.Build.MODEL,
+            supportedRates = getSupportedRefreshRates()
+        )
+    }
+
+    fun getAvailableHighTargets(): List<Int> {
+        return RefreshRateModeResolver.resolveSupportedHighTargets(getSupportedRefreshRates())
+    }
+
+    fun getAvailableLowTargets(): List<Int> {
+        return RefreshRateModeResolver.resolveSupportedLowTargets(getSupportedRefreshRates())
     }
 
     companion object {

@@ -165,6 +165,7 @@
     <string name="onboarding_shizuku_not_running">Shizuku service is not running. Please start it or use PC setup.</string>
     <string name="onboarding_adb_option_title">Via Computer (USB Cable)</string>
     <string name="onboarding_adb_option_desc">Connect phone to PC and execute this command in terminal:</string>
+    <string name="onboarding_xiaomi_security_warning">Xiaomi / HyperOS Notice: You MUST enable BOTH \'USB Debugging\' and \'USB Debugging (Security settings)\' via your Mi Account, otherwise WRITE_SECURE_SETTINGS will be blocked.</string>
     <string name="onboarding_permission_granted_badge">Permission Granted</string>
     <string name="onboarding_step_3_title">3. Touch Tracking</string>
     <string name="onboarding_step_3_desc">Accessibility Service is used to boost to 120Hz on touch and drop to 60Hz when idle.</string>
@@ -284,4 +285,60 @@
     <string name="onboarding_mode_120_title">🚀 Fixed 120 Hz</string>
     <string name="onboarding_mode_120_desc">Always maximum 120 fps smoothness without drops.</string>
     <string name="badge_current">CURRENT</string>
+
+    <!-- Navigation Audit -->
+    <string name="nav_audit">Audit</string>
+
+    <!-- Compatibility Audit Screen -->
+    <string name="audit_screen_title">Device Compatibility Audit</string>
+    <string name="audit_screen_subtitle">Independent analysis of Samsung One UI, panel architectures, and system restrictions</string>
+    <string name="audit_compatibility_index">COMPATIBILITY INDEX</string>
+    <string name="audit_active_device">ACTIVE DEVICE</string>
+    <string name="audit_score_optimal">Optimal (Non-LTPO)</string>
+    <string name="audit_score_ltpo">Partial (LTPO VRR)</string>
+    <string name="audit_score_vendor">Secondary Auth Required</string>
+    <string name="audit_ltpo_warning_title">LTPO Hardware VRR Advisory</string>
+    <string name="audit_ltpo_warning_text">On LTPO flagships (S23/S24 Ultra), the panel natively scales down to 1–24 Hz on static content. Forcing continuous 120 Hz disables hardware VRR savings. AdaptiveHz is best used on LTPO to bypass the 60 Hz lock in One UI Power Saving Mode.</string>
+    <string name="audit_90hz_title">Hardware Limit: 90 Hz</string>
+    <string name="audit_90hz_text">For Galaxy A52/A72, high target frequency is capped to 90 Hz to prevent display controller faults.</string>
+    <string name="audit_foldable_title">Foldable Dual-Screen Sync</string>
+    <string name="audit_foldable_text">Cover display refresh rate is synchronized via sub_refresh_rate_mode in Settings.Secure.</string>
+    <string name="audit_high_target_title">High Target Rate:</string>
+    <string name="audit_restricted_settings_title">Android 13+ Restricted Settings</string>
+    <string name="audit_restricted_settings_desc">If Accessibility Service is greyed out on sideloaded APK, open App Info → 3-dots menu → \"Allow restricted settings\".</string>
+    <string name="audit_tab_checklist">Checklist</string>
+    <string name="audit_tab_presets">Presets</string>
+    <string name="audit_tab_report">Report</string>
+    <string name="audit_btn_copy_report">Copy Report</string>
+    <string name="audit_report_copied">Report copied to clipboard</string>
+
+    <!-- Audit Checklist Items -->
+    <string name="audit_check_ltpo_title">Panel Type: Fixed AMOLED vs LTPO VRR</string>
+    <string name="audit_check_ltpo_finding">On non-LTPO devices (S20, S20 FE, S21, A52, A54), One UI does not reduce refresh rate on static content. AdaptiveHz delivers up to +45% battery gains. On LTPO flagships, forcing 120 Hz disables native low-frequency drops.</string>
+    <string name="audit_check_ltpo_solution">Resolved: Automated panel architecture detection. LTPO displays receive an optimization advisory, preserving hardware VRR drops.</string>
+
+    <string name="audit_check_peak_title">Peak Hardware Frequency (90 / 96 / 120 Hz)</string>
+    <string name="audit_check_peak_finding">Galaxy A52 (4G)/A72 hardware is capped at 90 Hz. Forcing 120 Hz crashes the display driver back to 60 Hz. Galaxy S20 series supports an undocumented 96 Hz mode.</string>
+    <string name="audit_check_peak_solution">Resolved: Dynamic High Target selector (90, 96, 120 Hz) with hardware clamping against Display.supportedModes.</string>
+
+    <string name="audit_check_foldable_title">Dual-Display Foldables (Z Fold / Flip)</string>
+    <string name="audit_check_foldable_finding">Cover screen and main folding screen are governed by separate system keys (refresh_rate_mode and sub_refresh_rate_mode).</string>
+    <string name="audit_check_foldable_solution">Resolved: Synchronous dual-key updates for sub_refresh_rate_mode during hinge transitions.</string>
+
+    <string name="audit_check_restricted_title">Android 13+ Restricted Settings (Sideload APK)</string>
+    <string name="audit_check_restricted_finding">When APK is installed outside Google Play, Android greys out Accessibility Service under Restricted Settings.</string>
+    <string name="audit_check_restricted_solution">Resolved: Interactive visual guide showing App Info → 3-dots menu → Allow restricted settings.</string>
+
+    <string name="audit_check_psm_title">Power Saving Mode Bypass Watchdog</string>
+    <string name="audit_check_psm_finding">One UI 6.0/6.1 DisplayPowerController resets refresh rate to 60 Hz on battery saver state transitions.</string>
+    <string name="audit_check_psm_solution">Resolved: Reactive broadcast listener on ACTION_POWER_SAVE_MODE_CHANGED with anti-watchdog delayed reassertion.</string>
+
+    <string name="audit_check_deepsleep_title">Samsung Device Care: Background Deep Sleep</string>
+    <string name="audit_check_deepsleep_finding">Samsung com.samsung.android.lool puts inactive apps into Deep Sleep after 72 hours, stopping touch listeners.</string>
+    <string name="audit_check_deepsleep_solution">Resolved: Battery optimization exemption request and persistent low-overhead status bar foreground badge.</string>
+
+    <string name="audit_check_xiaomi_title">Vendor Quirks: Xiaomi HyperOS / MIUI</string>
+    <string name="audit_check_xiaomi_finding">HyperOS and MIUI require enabling \"USB Debugging (Security settings)\" with an authorized Mi Account and SIM card.</string>
+    <string name="audit_check_xiaomi_solution">Resolved: Explicit vendor alert modal and instructions for Xiaomi / Redmi / POCO users.</string>
 </resources>
+

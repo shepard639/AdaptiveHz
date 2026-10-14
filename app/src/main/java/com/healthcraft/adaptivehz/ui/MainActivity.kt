@@ -127,6 +127,7 @@ class MainActivity : AppCompatActivity() {
 enum class NavigationTab {
     DASHBOARD,
     PROFILES,
+    AUDIT,
     ABOUT
 }
 
@@ -152,7 +153,7 @@ fun MainAppScaffold(
                         .fillMaxWidth()
                         .navigationBarsPadding()
                         .height(64.dp)
-                        .padding(horizontal = 16.dp),
+                        .padding(horizontal = 8.dp),
                     horizontalArrangement = Arrangement.SpaceAround,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -165,7 +166,7 @@ fun MainAppScaffold(
                                 selected = isDashboard
                             }
                             .clickable { selectedTab = NavigationTab.DASHBOARD }
-                            .padding(horizontal = 12.dp, vertical = 6.dp),
+                            .padding(horizontal = 8.dp, vertical = 6.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Icon(
@@ -191,7 +192,7 @@ fun MainAppScaffold(
                                 selected = isProfiles
                             }
                             .clickable { selectedTab = NavigationTab.PROFILES }
-                            .padding(horizontal = 12.dp, vertical = 6.dp),
+                            .padding(horizontal = 8.dp, vertical = 6.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Icon(
@@ -208,7 +209,33 @@ fun MainAppScaffold(
                         )
                     }
 
-                    // 3. About Device / Info
+                    // 3. Device Audit Hub
+                    val isAudit = selectedTab == NavigationTab.AUDIT
+                    Column(
+                        modifier = Modifier
+                            .semantics {
+                                role = Role.Tab
+                                selected = isAudit
+                            }
+                            .clickable { selectedTab = NavigationTab.AUDIT }
+                            .padding(horizontal = 8.dp, vertical = 6.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.VerifiedUser,
+                            contentDescription = null,
+                            tint = if (isAudit) HealthCraftPrimary else TextTertiary,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = stringResource(R.string.nav_audit),
+                            fontSize = 11.sp,
+                            fontWeight = if (isAudit) FontWeight.Bold else FontWeight.Normal,
+                            color = if (isAudit) HealthCraftPrimary else TextSecondary
+                        )
+                    }
+
+                    // 4. About Device / Info
                     val isAbout = selectedTab == NavigationTab.ABOUT
                     Column(
                         modifier = Modifier
@@ -217,7 +244,7 @@ fun MainAppScaffold(
                                 selected = isAbout
                             }
                             .clickable { selectedTab = NavigationTab.ABOUT }
-                            .padding(horizontal = 12.dp, vertical = 6.dp),
+                            .padding(horizontal = 8.dp, vertical = 6.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Icon(
@@ -248,6 +275,10 @@ fun MainAppScaffold(
                     repository = repository
                 )
                 NavigationTab.PROFILES -> AppProfilesScreen(
+                    repository = repository
+                )
+                NavigationTab.AUDIT -> DeviceAuditScreen(
+                    controller = controller,
                     repository = repository
                 )
                 NavigationTab.ABOUT -> AboutScreen(

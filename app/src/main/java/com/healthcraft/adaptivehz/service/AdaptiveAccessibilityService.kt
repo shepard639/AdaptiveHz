@@ -1,4 +1,4 @@
-﻿package com.healthcraft.adaptivehz.service
+package com.healthcraft.adaptivehz.service
 
 import android.accessibilityservice.AccessibilityService
 import android.content.BroadcastReceiver
@@ -53,18 +53,35 @@ class AdaptiveAccessibilityService : AccessibilityService() {
                 Intent.ACTION_SCREEN_OFF -> {
                     val mode = repository.operationMode.value
                     if (mode == OperationMode.ADAPTIVE || mode == OperationMode.ECO) {
-                        Log.d(TAG, "Screen OFF in $mode -> dropping to 60Hz")
-                        controller.dropToLow(60)
+                        val lowHz = repository.lowHzTarget.value
+                        Log.d(TAG, "Screen OFF in $mode -> dropping to ${lowHz}Hz")
+                        controller.dropToLow(lowHz)
                         AdaptiveCoordinator.setAdaptiveState(AdaptiveState.IDLE_TIMEOUT)
                     }
                 }
                 PowerManager.ACTION_POWER_SAVE_MODE_CHANGED -> {
+                    controller.invalidateCache()
                     if (repository.isPsmBypassEnabled.value) {
                         val mode = repository.operationMode.value
-                        if (mode == OperationMode.ADAPTIVE || mode == OperationMode.ECO) {
-                            Log.d(TAG, "Power save mode changed -> re-evaluating refresh rate")
-                            onUserInteraction()
+                        val highHz = repository.highHzTarget.value
+                        when (mode) {
+                            OperationMode.FIXED_120 -> controller.bypassPowerSaving120Hz(highHz)
+                            OperationMode.ADAPTIVE, OperationMode.ECO -> onUserInteraction()
+                            else -> {}
                         }
+                        // Anti-watchdog: One UI 6.0/6.1 DisplayPowerController resets asynchronously on PSM change.
+                        // Re-assert refresh rate with debounce after 350ms.
+                        handler.postDelayed({
+                            val currentMode = repository.operationMode.value
+                            if (repository.isPsmBypassEnabled.value) {
+                                controller.invalidateCache()
+                                if (currentMode == OperationMode.FIXED_120) {
+                                    controller.bypassPowerSaving120Hz(highHz)
+                                } else if (currentMode == OperationMode.ADAPTIVE || currentMode == OperationMode.ECO) {
+                                    onUserInteraction()
+                                }
+                            }
+                        }, 350L)
                     }
                 }
                 Intent.ACTION_POWER_CONNECTED -> {
@@ -124,6 +141,15 @@ class AdaptiveAccessibilityService : AccessibilityService() {
 
         controller = RefreshRateController.getInstance(this)
         repository = SettingsRepository(this)
+
+        // Validate and clamp configured targets against hardware panel capabilities
+        val supportedRates = controller.getSupportedRefreshRates()
+        val currentHigh = repository.highHzTarget.value
+        val clampedHigh = com.healthcraft.adaptivehz.core.RefreshRateModeResolver.clampTargetHz(currentHigh, supportedRates, fallback = 120)
+        if (currentHigh != clampedHigh) {
+            Log.i(TAG, "Clamping unsupported highHzTarget $currentHigh to $clampedHigh")
+            repository.setHighHzTarget(clampedHigh)
+        }
 
         val filter = IntentFilter().apply {
             addAction(Intent.ACTION_SCREEN_OFF)
@@ -257,12 +283,12 @@ class AdaptiveAccessibilityService : AccessibilityService() {
         when (currentAppMode) {
             ProfileMode.FORCE_60 -> {
                 cancelIdleTimer()
-                controller.dropToLow(60)
+                controller.dropToLow(repository.lowHzTarget.value)
                 AdaptiveCoordinator.setAdaptiveState(AdaptiveState.LOCKED_APP)
             }
             ProfileMode.FORCE_120 -> {
                 cancelIdleTimer()
-                controller.setFixed120()
+                controller.boostToHigh(repository.highHzTarget.value)
                 AdaptiveCoordinator.setAdaptiveState(AdaptiveState.LOCKED_APP)
             }
             ProfileMode.ADAPTIVE -> {
@@ -295,7 +321,7 @@ class AdaptiveAccessibilityService : AccessibilityService() {
         }
 
         if (currentAppMode == ProfileMode.FORCE_60) {
-            controller.dropToLow(60)
+            controller.dropToLow(repository.lowHzTarget.value)
             AdaptiveCoordinator.setAdaptiveState(AdaptiveState.LOCKED_APP)
             return
         }
@@ -305,7 +331,7 @@ class AdaptiveAccessibilityService : AccessibilityService() {
         controller.boostToHigh(highHz)
         AdaptiveCoordinator.setAdaptiveState(AdaptiveState.ACTIVE_TOUCH)
 
-        // If charging with smart charging, keep 120Hz constantly (only in ADAPTIVE, never in ECO)
+        // If charging with smart charging, keep highHz constantly (only in ADAPTIVE, never in ECO)
         if (mode == OperationMode.ADAPTIVE && isCharging && repository.isSmartChargingEnabled.value) {
             cancelIdleTimer()
         } else {
@@ -331,9 +357,10 @@ class AdaptiveAccessibilityService : AccessibilityService() {
             val currentMode = repository.operationMode.value
             if (currentMode == OperationMode.ADAPTIVE || currentMode == OperationMode.ECO) {
                 if (currentAppMode != ProfileMode.FORCE_120) {
-                    Log.d(TAG, "Idle timeout reached (${timeoutMillis}ms) in $currentMode -> dropping to 60Hz")
+                    val lowHz = repository.lowHzTarget.value
+                    Log.d(TAG, "Idle timeout reached (${timeoutMillis}ms) in $currentMode -> dropping to ${lowHz}Hz")
                     suppressInteractionUntil = System.currentTimeMillis() + 600L
-                    controller.dropToLow(60)
+                    controller.dropToLow(lowHz)
                     AdaptiveCoordinator.setAdaptiveState(AdaptiveState.IDLE_TIMEOUT)
                 }
             }

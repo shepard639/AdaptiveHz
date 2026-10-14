@@ -13,7 +13,7 @@
   <b>Intelligent dynamic refresh rate, 120Hz in Power Saving Mode, and up to +45% battery life on non-LTPO Samsung displays.</b>
 </p>
 
-[**Download APK (Releases)**](https://github.com/shepard639/AdaptiveHz/releases) • [**Installation Guide**](#-quick-start--setup) • [**About HealthCraft**](#-healthcraft-ecosystem) • [**🇷🇺 Читать на русском**](README_RU.md)
+[**Download APK (Releases)**](https://github.com/shepard639/AdaptiveHz/releases) • [**🌐 Live Web Demo**](https://shepard639.github.io/AdaptiveHz/) • [**Installation Guide**](#-quick-start--setup) • [**About HealthCraft**](#-healthcraft-ecosystem) • [**🇷🇺 Читать на русском**](README_RU.md)
 
 </div>
 
@@ -54,6 +54,7 @@ On Samsung Galaxy devices with fixed-rate AMOLED displays (Galaxy S20, S20 FE, S
 | **🛡️ Low Battery Defender** | Automatically locks to 60 Hz system-wide below 20% battery to keep you connected. |
 | **🌡️ Thermal Guard** | Temporarily caps to 60 Hz when battery temp exceeds 41.5°C to prevent throttling and degradation. |
 | **📊 Status Bar Hz Counter** | Ultra-compact live refresh rate badge (`120ᴴᶻ` / `60ᴴᶻ`) next to the system clock. |
+| **🔍 Device Audit & Matrix Advisor** | Compatibility index (0–100%), LTPO VRR hardware advisory, 90/96/120Hz high targets discovery, and One UI watchdog diagnostics. |
 | **🎛️ Movable Floating HUD** | Lightweight floating pill overlay indicating current SurfaceFlinger frame rate. |
 
 ---

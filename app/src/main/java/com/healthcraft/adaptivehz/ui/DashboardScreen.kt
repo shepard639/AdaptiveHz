@@ -1,4 +1,4 @@
-﻿package com.healthcraft.adaptivehz.ui
+package com.healthcraft.adaptivehz.ui
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -372,6 +372,36 @@ fun DashboardScreen(
                     borderColor = MetricTealBorder,
                     accentColor = MetricTealText
                 )
+            }
+
+            val isLtpo = remember { controller.isLtpoPanel() }
+            if (isLtpo) {
+                Spacer(modifier = Modifier.height(10.dp))
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(14.dp),
+                    color = MetricAmberBg,
+                    border = androidx.compose.foundation.BorderStroke(1.dp, MetricAmberBorder)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Warning,
+                            contentDescription = null,
+                            tint = MetricAmberText,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = stringResource(R.string.audit_ltpo_warning_title) + " (LTPO VRR)",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MetricAmberText
+                        )
+                    }
+                }
             }
         }
 

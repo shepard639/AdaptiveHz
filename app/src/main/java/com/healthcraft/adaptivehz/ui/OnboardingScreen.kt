@@ -1,4 +1,4 @@
-﻿package com.healthcraft.adaptivehz.ui
+package com.healthcraft.adaptivehz.ui
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -20,7 +20,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.HelpOutline
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -465,6 +467,39 @@ private fun StepPermissions(
                 ShizukuExplainerDialog(onDismiss = { showShizukuExplainer = false })
             }
 
+            // Xiaomi / HyperOS specific notice
+            val isXiaomiDevice = remember {
+                val m = Build.MANUFACTURER
+                m.contains("Xiaomi", true) || m.contains("Redmi", true) || m.contains("POCO", true)
+            }
+            if (isXiaomiDevice) {
+                Surface(
+                    color = MetricAmberBg,
+                    shape = RoundedCornerShape(14.dp),
+                    border = BorderStroke(1.dp, MetricAmberBorder),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier.padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Warning,
+                            contentDescription = null,
+                            tint = MetricAmberText,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(
+                            text = stringResource(R.string.onboarding_xiaomi_security_warning),
+                            fontSize = 11.sp,
+                            color = MetricAmberText,
+                            lineHeight = 16.sp
+                        )
+                    }
+                }
+            }
+
             // Option 1: Shizuku
             HealthCraftCard {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -778,7 +813,7 @@ fun DevModeGuideCard(context: Context) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    imageVector = Icons.Default.HelpOutline,
+                    imageVector = Icons.AutoMirrored.Rounded.HelpOutline,
                     contentDescription = null,
                     tint = HealthCraftPrimary,
                     modifier = Modifier.size(24.dp)
@@ -1032,16 +1067,25 @@ private fun StepAccessibility(
                 // Restricted Settings warning for Android 13+ with direct shortcut
                 Surface(
                     color = MetricAmberBg,
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(14.dp),
                     border = BorderStroke(1.dp, MetricAmberBorder)
                 ) {
                     Column(modifier = Modifier.padding(14.dp)) {
-                        Text(
-                            text = stringResource(R.string.onboarding_restricted_warning_title),
-                            style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                            color = MetricAmberText
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Rounded.MoreVert,
+                                contentDescription = null,
+                                tint = MetricAmberText,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = stringResource(R.string.onboarding_restricted_warning_title),
+                                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                                color = MetricAmberText
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(6.dp))
                         Text(
                             text = stringResource(R.string.onboarding_restricted_warning_desc),
                             style = MaterialTheme.typography.bodySmall,
@@ -1049,7 +1093,7 @@ private fun StepAccessibility(
                             lineHeight = 16.sp
                         )
                         Spacer(modifier = Modifier.height(10.dp))
-                        OutlinedButton(
+                        Button(
                             onClick = {
                                 try {
                                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
@@ -1060,11 +1104,23 @@ private fun StepAccessibility(
                                     Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
                                 }
                             },
+                            colors = ButtonDefaults.buttonColors(containerColor = MetricAmberText),
                             shape = RoundedCornerShape(10.dp),
-                            border = BorderStroke(1.dp, MetricAmberBorder),
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text(stringResource(R.string.btn_open_app_details), fontSize = 12.sp, color = MetricAmberText)
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = stringResource(R.string.btn_open_app_details),
+                                fontSize = 12.sp,
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                     }
                 }

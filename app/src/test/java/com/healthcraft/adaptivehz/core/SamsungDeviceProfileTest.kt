@@ -1,4 +1,4 @@
-﻿package com.healthcraft.adaptivehz.core
+package com.healthcraft.adaptivehz.core
 
 import com.healthcraft.adaptivehz.data.OperationMode
 import org.junit.Assert.assertEquals
@@ -45,6 +45,37 @@ class SamsungDeviceProfileTest {
         assertTrue(rates.contains(120))
         assertEquals(6, rates.size)
         assertEquals(listOf(24, 30, 48, 60, 96, 120), rates)
+
+        // LTPO panel detection via low VRR rates (<= 30Hz)
+        assertTrue(RefreshRateModeResolver.isLtpoDevice("Galaxy Device", rates))
+        // Model-based LTPO detection
+        assertTrue(RefreshRateModeResolver.isLtpoDevice("Galaxy S24 Ultra", listOf(60, 120)))
+        assertTrue(RefreshRateModeResolver.isLtpoDevice("SM-S928B", listOf(60, 120)))
+        assertTrue(RefreshRateModeResolver.isLtpoDevice("Galaxy Note 20 Ultra", listOf(60, 120)))
+        // Non-LTPO models with standard rates
+        assertFalse(RefreshRateModeResolver.isLtpoDevice("Galaxy S20 FE", listOf(60, 120)))
+        assertFalse(RefreshRateModeResolver.isLtpoDevice("Galaxy A52", listOf(60, 90)))
+    }
+
+    /**
+     * Tests discovery of supported high-refresh rate targets across different Samsung panel types.
+     */
+    @Test
+    fun testSupportedHighTargetsDiscovery() {
+        // Galaxy A52 / A72 capped at 90Hz
+        val a52Rates = listOf(60, 90)
+        val a52Targets = RefreshRateModeResolver.resolveSupportedHighTargets(a52Rates)
+        assertEquals(listOf(90), a52Targets)
+
+        // Galaxy S20 series with 96Hz sweet spot
+        val s20Rates = listOf(48, 60, 96, 120)
+        val s20Targets = RefreshRateModeResolver.resolveSupportedHighTargets(s20Rates)
+        assertEquals(listOf(96, 120), s20Targets)
+
+        // Standard 120Hz panel (S20 FE, S21 FE)
+        val s20FeRates = listOf(60, 120)
+        val s20FeTargets = RefreshRateModeResolver.resolveSupportedHighTargets(s20FeRates)
+        assertEquals(listOf(120), s20FeTargets)
     }
 
     /**

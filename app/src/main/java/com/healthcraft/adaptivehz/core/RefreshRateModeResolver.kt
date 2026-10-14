@@ -1,4 +1,4 @@
-﻿package com.healthcraft.adaptivehz.core
+package com.healthcraft.adaptivehz.core
 
 import kotlin.math.roundToInt
 
@@ -78,4 +78,34 @@ object RefreshRateModeResolver {
     fun isHighRefreshRate(hz: Int): Boolean {
         return hz >= 90
     }
+
+    /**
+     * Detects if the device panel utilizes LTPO Variable Refresh Rate (VRR) technology.
+     * Detected either via dynamic low VRR frequency modes (<= 30Hz) or known flagship hardware models.
+     */
+    fun isLtpoDevice(model: String, supportedRates: List<Int>): Boolean {
+        if (supportedRates.any { it in 1..30 }) return true
+        if (model.isBlank()) return false
+        val cleanModel = model.trim()
+        return cleanModel.contains("Ultra", ignoreCase = true) ||
+                cleanModel.matches(Regex(".*SM-(N986|G998|S908|S918|S928|S938).*", RegexOption.IGNORE_CASE))
+    }
+
+    /**
+     * Discovers and returns available high-refresh rate targets (>= 90Hz) supported by the hardware panel.
+     * Handles non-standard panels like Galaxy A52 (90Hz) or Galaxy S20 (96Hz, 120Hz).
+     */
+    fun resolveSupportedHighTargets(supportedRates: List<Int>): List<Int> {
+        val highRates = supportedRates.filter { it >= 90 }.sorted()
+        return if (highRates.isNotEmpty()) highRates else listOf(120)
+    }
+
+    /**
+     * Discovers and returns available low-refresh rate targets (<= 60Hz) supported by the hardware panel.
+     */
+    fun resolveSupportedLowTargets(supportedRates: List<Int>): List<Int> {
+        val lowRates = supportedRates.filter { it <= 60 }.sorted()
+        return if (lowRates.isNotEmpty()) lowRates else listOf(60)
+    }
 }
+
