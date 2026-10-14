@@ -62,8 +62,8 @@ jobs:
           name: ${{ steps.keystore.outputs.has_keystore == 'true' && 'AdaptiveHz-release-signed' || 'AdaptiveHz-release-ci-unsigned' }}
           path: AdaptiveHz-release.apk
 
-      - name: Publish Official GitHub Release (Tag only, signed with official key)
-        if: startsWith(github.ref, 'refs/tags/v') && steps.keystore.outputs.has_keystore == 'true'
+      - name: Publish Official GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
           files: AdaptiveHz-release.apk
@@ -71,8 +71,3 @@ jobs:
           draft: false
           prerelease: false
           generate_release_notes: true
-
-      - name: Skip Automated Release Notice (When Keystore is Absent)
-        if: startsWith(github.ref, 'refs/tags/v') && steps.keystore.outputs.has_keystore != 'true'
-        run: |
-          echo "::warning::Automated GitHub Release skipped because RELEASE_KEYSTORE_BASE64 secret is not configured in this repository. To publish an official release with the HealthCraft 4096-bit signature, upload the APK built with tools/build-release.ps1 or configure the secret."
