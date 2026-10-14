@@ -1,4 +1,4 @@
-﻿package com.healthcraft.adaptivehz.data
+package com.healthcraft.adaptivehz.data
 
 import android.content.Context
 import android.util.Log
@@ -107,8 +107,8 @@ class SettingsRepository(context: Context) {
                     _isAdaptiveEnabled.value = prefs[KEY_ADAPTIVE_ENABLED]
                         ?: (mode == OperationMode.ADAPTIVE || mode == OperationMode.ECO)
 
-                    _idleTimeoutSeconds.value = prefs[KEY_IDLE_TIMEOUT_SECONDS] ?: 5
-                    _highHzTarget.value = prefs[KEY_HIGH_HZ_TARGET] ?: 120
+                    val rawHigh = prefs[KEY_HIGH_HZ_TARGET] ?: 120
+                    _highHzTarget.value = if (rawHigh >= 90) rawHigh else 120
                     _lowHzTarget.value = prefs[KEY_LOW_HZ_TARGET] ?: 60
                     _isPsmBypassEnabled.value = prefs[KEY_PSM_BYPASS] ?: true
                     _isSmartChargingEnabled.value = prefs[KEY_SMART_CHARGING] ?: false
@@ -165,10 +165,11 @@ class SettingsRepository(context: Context) {
     }
 
     fun setHighHzTarget(hz: Int) {
-        _highHzTarget.value = hz
+        val safeHz = if (hz >= 90) hz else 120
+        _highHzTarget.value = safeHz
         repositoryScope.launch {
             dataStore.edit { preferences ->
-                preferences[KEY_HIGH_HZ_TARGET] = hz
+                preferences[KEY_HIGH_HZ_TARGET] = safeHz
             }
         }
     }

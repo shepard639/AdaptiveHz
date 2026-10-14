@@ -145,7 +145,7 @@ class AdaptiveAccessibilityService : AccessibilityService() {
         // Validate and clamp configured targets against hardware panel capabilities
         val supportedRates = controller.getSupportedRefreshRates()
         val currentHigh = repository.highHzTarget.value
-        val clampedHigh = com.healthcraft.adaptivehz.core.RefreshRateModeResolver.clampTargetHz(currentHigh, supportedRates, fallback = 120)
+        val clampedHigh = com.healthcraft.adaptivehz.core.RefreshRateModeResolver.clampHighTargetHz(currentHigh, supportedRates, fallback = 120)
         if (currentHigh != clampedHigh) {
             Log.i(TAG, "Clamping unsupported highHzTarget $currentHigh to $clampedHigh")
             repository.setHighHzTarget(clampedHigh)
@@ -253,6 +253,12 @@ class AdaptiveAccessibilityService : AccessibilityService() {
             Log.e(TAG, "Error unregistering powerAndBatteryReceiver during cleanup", e)
         }
         cancelIdleTimer()
+        // Restore standard 120Hz refresh rate so the display is never left locked in 60Hz upon service exit
+        try {
+            controller.setFixed120(force = true)
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to restore standard 120Hz on destroy", e)
+        }
         Log.i(TAG, "AdaptiveAccessibilityService destroyed")
     }
 
@@ -352,6 +358,7 @@ class AdaptiveAccessibilityService : AccessibilityService() {
         } else {
             repository.idleTimeoutSeconds.value * 1000L
         }
+        AdaptiveCoordinator.updateInteractionTimestamp(timeoutMillis)
 
         idleRunnable = Runnable {
             val currentMode = repository.operationMode.value

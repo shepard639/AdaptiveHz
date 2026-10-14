@@ -65,6 +65,17 @@ object RefreshRateModeResolver {
     }
 
     /**
+     * Validates and clamps a requested high refresh rate target (>= 90Hz).
+     * STRICT SAFETY: Never allows a high target to be clamped down to 60Hz or lower,
+     * which would otherwise destroy the adaptive touch boost cycle.
+     */
+    fun clampHighTargetHz(requestedHz: Int, supportedRates: List<Int>, fallback: Int = 120): Int {
+        val highTargets = resolveSupportedHighTargets(supportedRates)
+        if (highTargets.contains(requestedHz)) return requestedHz
+        return highTargets.minByOrNull { kotlin.math.abs(it - requestedHz) } ?: fallback
+    }
+
+    /**
      * Computes the peak and min refresh rate floats for One UI power saving bypass.
      */
     fun calculatePsmBypassParameters(targetHz: Int): Pair<Float, Float> {

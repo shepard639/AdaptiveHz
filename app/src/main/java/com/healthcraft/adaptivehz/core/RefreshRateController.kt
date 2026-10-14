@@ -213,7 +213,7 @@ class RefreshRateController private constructor(private val appContext: Context)
     }
 
     fun boostToHigh(highHz: Int = 120, force: Boolean = false): Boolean {
-        val safeHz = RefreshRateModeResolver.clampTargetHz(highHz, getSupportedRefreshRates(), fallback = 120)
+        val safeHz = RefreshRateModeResolver.clampHighTargetHz(highHz, getSupportedRefreshRates(), fallback = 120)
         return setRefreshRate(targetHz = safeHz, minHz = safeHz, force = force)
     }
 
@@ -223,7 +223,7 @@ class RefreshRateController private constructor(private val appContext: Context)
     }
 
     fun bypassPowerSaving120Hz(targetHz: Int = 120): Boolean {
-        val safeHz = RefreshRateModeResolver.clampTargetHz(targetHz, getSupportedRefreshRates(), fallback = 120)
+        val safeHz = RefreshRateModeResolver.clampHighTargetHz(targetHz, getSupportedRefreshRates(), fallback = 120)
         val (peak, min) = RefreshRateModeResolver.calculatePsmBypassParameters(safeHz)
         return setRefreshRate(targetHz = peak.toInt(), minHz = min.toInt(), force = true)
     }

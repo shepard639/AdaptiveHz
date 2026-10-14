@@ -1,4 +1,4 @@
-﻿package com.healthcraft.adaptivehz.service
+package com.healthcraft.adaptivehz.service
 
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -39,6 +39,17 @@ object AdaptiveCoordinator {
 
     fun setActivePackageName(packageName: String) {
         _activePackageName.value = packageName
+    }
+
+    private val _lastInteractionTimestamp = MutableStateFlow(0L)
+    val lastInteractionTimestamp: StateFlow<Long> = _lastInteractionTimestamp.asStateFlow()
+
+    private val _idleTimeoutDurationMs = MutableStateFlow(5000L)
+    val idleTimeoutDurationMs: StateFlow<Long> = _idleTimeoutDurationMs.asStateFlow()
+
+    fun updateInteractionTimestamp(durationMs: Long) {
+        _lastInteractionTimestamp.value = System.currentTimeMillis()
+        _idleTimeoutDurationMs.value = durationMs
     }
 
     fun notifyUserInteraction() {

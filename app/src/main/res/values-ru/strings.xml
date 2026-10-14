@@ -340,5 +340,30 @@
     <string name="audit_check_xiaomi_title">Специфика сторонних вендоров (Xiaomi HyperOS / MIUI)</string>
     <string name="audit_check_xiaomi_finding">В HyperOS и MIUI одного флага «Отладка по USB» недостаточно. Требуется включить «Отладка по USB (Настройки безопасности)».</string>
     <string name="audit_check_xiaomi_solution">Внедрено: Предупреждение и инструкция для пользователей Xiaomi / Redmi / POCO.</string>
+    <!-- One UI Audit Banner & BottomSheet -->
+    <string name="audit_banner_title">Аудит совместимости One UI</string>
+    <string name="audit_banner_status">98% Оптимально</string>
+    <string name="audit_banner_desc">Samsung AMOLED • 60/120 Гц • Полная поддержка</string>
+    <string name="audit_banner_action">Открыть аудит</string>
+    <string name="audit_sheet_title">Аудит совместимости One UI и матрицы</string>
+    <string name="audit_sheet_subtitle">Аппаратный статус дисплея и системные интеграции</string>
+    <string name="audit_sheet_status_badge">100% Совместимо</string>
+    <string name="audit_sheet_device_label">Активное устройство</string>
+    <string name="audit_sheet_matrix_title">Архитектура дисплея</string>
+    <string name="audit_sheet_matrix_desc">Samsung Super AMOLED (Non-LTPO). Экран аппаратно поддерживает фиксированные частоты 60 Гц и 120 Гц. One UI не снижает частоту на статичных изображениях. Технология AdaptiveHz восполняет этот пробел, снижая частоту до 60 Гц во время чтения, экономя до 35–45% заряда батареи.</string>
+    <string name="audit_sheet_auto_title">Автоматическая калибровка</string>
+    <string name="audit_sheet_auto_desc">Пиковая частота безопасно зафиксирована на 120 Гц, частота покоя — 60 Гц. Все параметры применены автоматически. Ручной выбор пресетов не требуется.</string>
+    <string name="audit_sheet_psm_title">Режим энергосбережения One UI</string>
+    <string name="audit_sheet_psm_desc">Поддерживается полный обход блокировки 60 Гц при включенном режиме энергосбережения One UI.</string>
+    <string name="audit_sheet_close_btn">Понятно</string>
+
+    <!-- Touch & Scroll Testing Zone -->
+    <string name="test_zone_title">Зона тестирования касаний и скролла</string>
+    <string name="test_zone_subtitle">Интерактивная проверка динамического переключения</string>
+    <string name="test_zone_desc">Коснитесь или скролльте внутри карточки. Экран мгновенно переключится в 120 Гц и плавно вернется в 60 Гц по истечении таймера.</string>
+    <string name="test_zone_countdown_label">Сброс через: осталось %1$.1f с до 60 Гц</string>
+    <string name="test_zone_idle_label">Покой: 60 Гц (коснитесь для 120 Гц)</string>
+    <string name="test_zone_touch_hint">👇 Нажмите или смахните здесь для теста</string>
+    <string name="test_zone_active_hint">⚡ Касание зафиксировано! 120 Гц активно</string>
 </resources>
 

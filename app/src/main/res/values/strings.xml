@@ -340,5 +340,30 @@
     <string name="audit_check_xiaomi_title">Vendor Quirks: Xiaomi HyperOS / MIUI</string>
     <string name="audit_check_xiaomi_finding">HyperOS and MIUI require enabling \"USB Debugging (Security settings)\" with an authorized Mi Account and SIM card.</string>
     <string name="audit_check_xiaomi_solution">Resolved: Explicit vendor alert modal and instructions for Xiaomi / Redmi / POCO users.</string>
+    <!-- One UI Audit Banner & BottomSheet -->
+    <string name="audit_banner_title">One UI Compatibility Audit</string>
+    <string name="audit_banner_status">98% Optimal</string>
+    <string name="audit_banner_desc">Samsung AMOLED • 60/120 Hz • Full Support</string>
+    <string name="audit_banner_action">Open Audit</string>
+    <string name="audit_sheet_title">One UI Compatibility &amp; Display Audit</string>
+    <string name="audit_sheet_subtitle">Hardware display profile &amp; automated tuning</string>
+    <string name="audit_sheet_status_badge">100% Compatible</string>
+    <string name="audit_sheet_device_label">Active Device</string>
+    <string name="audit_sheet_matrix_title">Display Matrix Architecture</string>
+    <string name="audit_sheet_matrix_desc">Samsung Super AMOLED (Non-LTPO). Supports fixed hardware modes of 60 Hz and 120 Hz. One UI does not reduce refresh rate on static content by default. AdaptiveHz bridges this gap, saving up to 35–45% battery.</string>
+    <string name="audit_sheet_auto_title">Automated Calibration</string>
+    <string name="audit_sheet_auto_desc">Peak rate locked safely at 120 Hz with low idle mode at 60 Hz. All parameters were calibrated automatically for your hardware. Manual presets are not needed.</string>
+    <string name="audit_sheet_psm_title">Power Saving Mode Compatibility</string>
+    <string name="audit_sheet_psm_desc">Full 120 Hz bypass is supported when One UI battery saver is active.</string>
+    <string name="audit_sheet_close_btn">Got it</string>
+
+    <!-- Touch & Scroll Testing Zone -->
+    <string name="test_zone_title">Touch &amp; Scroll Testing Zone</string>
+    <string name="test_zone_subtitle">Interactive Dynamic Hz Verification</string>
+    <string name="test_zone_desc">Touch, swipe or tap inside this card. Display will instantly boost to peak 120 Hz, then smoothly fall back to 60 Hz after inactivity.</string>
+    <string name="test_zone_countdown_label">Idle drop in: %1$.1f s remaining to 60 Hz</string>
+    <string name="test_zone_idle_label">Idle: 60 Hz locked (touch to boost)</string>
+    <string name="test_zone_touch_hint">👇 Tap or scroll here to test</string>
+    <string name="test_zone_active_hint">⚡ Touch detected! 120 Hz active</string>
 </resources>
 
