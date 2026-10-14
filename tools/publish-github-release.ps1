@@ -89,9 +89,9 @@ $release = $null
 if ($existingRelease) {
     Write-Host "Release for $TagName already exists (id: $($existingRelease.id)). Updating..." -ForegroundColor Yellow
     $updateUri = "$releaseUri/$($existingRelease.id)"
-    $release = Invoke-RestMethod -Uri $updateUri -Headers $headers -Method Patch -Body $bodyObj
+    $release = Invoke-RestMethod -Uri $updateUri -Headers $headers -Method Patch -Body ([System.Text.Encoding]::UTF8.GetBytes($bodyObj)) -ContentType "application/json; charset=utf-8"
 } else {
-    $release = Invoke-RestMethod -Uri $releaseUri -Headers $headers -Method Post -Body $bodyObj
+    $release = Invoke-RestMethod -Uri $releaseUri -Headers $headers -Method Post -Body ([System.Text.Encoding]::UTF8.GetBytes($bodyObj)) -ContentType "application/json; charset=utf-8"
 }
 
 Write-Host "Release created/updated successfully: $($release.html_url)" -ForegroundColor Green
