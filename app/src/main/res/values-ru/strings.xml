@@ -359,8 +359,8 @@
 
     <!-- Touch & Scroll Testing Zone -->
     <string name="test_zone_title">Зона тестирования касаний и скролла</string>
-    <string name="test_zone_subtitle">Интерактивная проверка динамического переключения</string>
-    <string name="test_zone_desc">Коснитесь или скролльте внутри карточки. Экран мгновенно переключится в 120 Гц и плавно вернется в 60 Гц по истечении таймера.</string>
+    <string name="test_zone_subtitle">Нажмите или листайте в этой области</string>
+    <string name="test_zone_desc">Нажмите, ведите пальцем или скролльте здесь: частота мгновенно поднимется до 120 Гц. Отпустите — и начнется обратный отсчет сброса до 60 Гц.</string>
     <string name="test_zone_countdown_label">Сброс через: осталось %1$.1f с до 60 Гц</string>
     <string name="test_zone_idle_label">Покой: 60 Гц (коснитесь для 120 Гц)</string>
     <string name="test_zone_touch_hint">👇 Нажмите или смахните здесь для теста</string>

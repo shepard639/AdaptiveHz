@@ -25,9 +25,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.selected
@@ -418,7 +420,6 @@ fun DashboardScreen(
         // 3. One UI Compatibility Audit Banner
         OneUiAuditBanner(
             compatScore = compatScore,
-            compatLabel = stringResource(compatLabelRes),
             onOpenAuditClick = { showAuditSheet = true }
         )
 
@@ -1249,105 +1250,101 @@ fun LiveRefreshRateBadge(
 @Composable
 fun OneUiAuditBanner(
     compatScore: Int,
-    compatLabel: String,
     onOpenAuditClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val model = remember { Build.MODEL }
     Surface(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp))
-            .clickable { onOpenAuditClick() },
+        onClick = onOpenAuditClick,
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
         color = HealthCraftSurface,
-        border = androidx.compose.foundation.BorderStroke(1.dp, HealthCraftCardStroke),
-        shape = RoundedCornerShape(20.dp)
+        border = androidx.compose.foundation.BorderStroke(1.dp, HealthCraftCardStroke)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+                .padding(horizontal = 14.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically
+            // Left icon: Rounded squircle with shield per mockup
+            Box(
+                modifier = Modifier
+                    .size(42.dp)
+                    .clip(RoundedCornerShape(13.dp))
+                    .background(HealthCraftMintContainer)
+                    .border(1.dp, HealthCraftMintBorder, RoundedCornerShape(13.dp)),
+                contentAlignment = Alignment.Center
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(HealthCraftMintContainer)
-                        .border(1.dp, HealthCraftMintBorder, RoundedCornerShape(12.dp)),
-                    contentAlignment = Alignment.Center
+                Icon(
+                    imageVector = Icons.Rounded.VerifiedUser,
+                    contentDescription = null,
+                    tint = HealthCraftPrimary,
+                    modifier = Modifier.size(22.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.width(10.dp))
+
+            // Center info: Title + score badge + device subtitle
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Rounded.VerifiedUser,
-                        contentDescription = null,
-                        tint = HealthCraftPrimary,
-                        modifier = Modifier.size(22.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.width(12.dp))
-                Column {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = stringResource(R.string.audit_banner_title),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = TextPrimary
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(6.dp))
-                                .background(MetricMintBg)
-                                .border(1.dp, MetricMintBorder, RoundedCornerShape(6.dp))
-                                .padding(horizontal = 6.dp, vertical = 2.dp)
-                        ) {
-                            Text(
-                                text = "$compatScore% $compatLabel",
-                                fontSize = 9.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = MetricMintText
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = stringResource(R.string.audit_banner_desc),
-                        fontSize = 11.sp,
-                        color = TextSecondary
+                        text = stringResource(R.string.audit_banner_title),
+                        fontSize = 12.5.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = TextPrimary,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false)
                     )
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(6.dp))
+                            .background(HealthCraftMintContainer)
+                            .border(1.dp, HealthCraftMintBorder, RoundedCornerShape(6.dp))
+                            .padding(horizontal = 5.dp, vertical = 1.5.dp)
+                    ) {
+                        Text(
+                            text = "$compatScore% Optimal",
+                            fontSize = 9.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = HealthCraftPrimary
+                        )
+                    }
                 }
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = "$model • One UI 5.1 (Android ${Build.VERSION.RELEASE})",
+                    fontSize = 11.sp,
+                    color = TextSecondary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
 
             Spacer(modifier = Modifier.width(8.dp))
 
+            // Right button
             Surface(
                 onClick = onOpenAuditClick,
-                shape = RoundedCornerShape(10.dp),
-                color = HealthCraftMintContainer,
+                shape = RoundedCornerShape(12.dp),
+                color = HealthCraftBg,
                 border = androidx.compose.foundation.BorderStroke(1.dp, HealthCraftMintBorder)
             ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(R.string.audit_banner_action),
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = HealthCraftPrimaryDark
-                    )
-                    Spacer(modifier = Modifier.width(2.dp))
-                    Icon(
-                        imageVector = Icons.Rounded.ChevronRight,
-                        contentDescription = null,
-                        tint = HealthCraftPrimaryDark,
-                        modifier = Modifier.size(14.dp)
-                    )
-                }
+                Text(
+                    text = stringResource(R.string.audit_banner_action),
+                    fontSize = 11.5.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = HealthCraftPrimary,
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 7.dp)
+                )
             }
         }
     }
@@ -1397,153 +1394,163 @@ fun TouchTestZoneCard(
     }
 
     val isHighHz = currentHz >= 90
+    val remainingSeconds = remainingMs / 1000f
 
-    HealthCraftCard(
-        modifier = modifier.pointerInput(Unit) {
-            awaitPointerEventScope {
-                while (true) {
-                    val event = awaitPointerEvent()
-                    if (event.changes.any { it.pressed }) {
-                        AdaptiveCoordinator.notifyUserInteraction()
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+            .pointerInput(Unit) {
+                awaitPointerEventScope {
+                    while (true) {
+                        val event = awaitPointerEvent(PointerEventPass.Initial)
+                        if (event.changes.any { it.pressed }) {
+                            AdaptiveCoordinator.notifyUserInteraction()
+                            controller.boostToHigh()
+                        }
+                    }
+                }
+            },
+        shape = RoundedCornerShape(22.dp),
+        color = HealthCraftSurface,
+        border = androidx.compose.foundation.BorderStroke(1.5.dp, HealthCraftMintBorder)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            // Header: Icon + Title + 120Hz Badge
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(38.dp)
+                        .clip(CircleShape)
+                        .background(HealthCraftPrimary),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.TouchApp,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(10.dp))
+
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = stringResource(R.string.test_zone_title),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = TextPrimary
+                    )
+                    Text(
+                        text = stringResource(R.string.test_zone_subtitle),
+                        fontSize = 11.sp,
+                        color = TextSecondary
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                // Hz Badge
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    color = if (isHighHz) HealthCraftPrimary else HealthCraftBg,
+                    border = androidx.compose.foundation.BorderStroke(
+                        1.dp,
+                        if (isHighHz) HealthCraftPrimary else HealthCraftCardStroke
+                    )
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = if (isHighHz) Icons.Rounded.Bolt else Icons.Rounded.Lock,
+                            contentDescription = null,
+                            tint = if (isHighHz) Color.White else TextSecondary,
+                            modifier = Modifier.size(14.dp)
+                        )
+                        Spacer(modifier = Modifier.width(3.dp))
+                        Text(
+                            text = "$currentHz Hz",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = if (isHighHz) Color.White else TextSecondary
+                        )
                     }
                 }
             }
-        }
-    ) {
-        // Header Row: Title & Hz Badge
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+
+            Spacer(modifier = Modifier.height(10.dp))
+
             Text(
-                text = stringResource(R.string.test_zone_title),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = TextPrimary
+                text = stringResource(R.string.test_zone_desc),
+                fontSize = 11.sp,
+                color = TextSecondary,
+                lineHeight = 16.sp
             )
 
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(if (isHighHz) MetricMintBg else HealthCraftBg)
-                    .border(
-                        1.dp,
-                        if (isHighHz) MetricMintBorder else HealthCraftCardStroke,
-                        RoundedCornerShape(8.dp)
-                    )
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
-            ) {
-                Text(
-                    text = if (isHighHz) "⚡ $currentHz Hz" else "🔒 $currentHz Hz",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = if (isHighHz) MetricMintText else TextSecondary
-                )
-            }
-        }
+            Spacer(modifier = Modifier.height(12.dp))
 
-        Spacer(modifier = Modifier.height(2.dp))
-
-        Text(
-            text = stringResource(R.string.test_zone_subtitle),
-            fontSize = 12.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = HealthCraftPrimary
-        )
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        Text(
-            text = stringResource(R.string.test_zone_desc),
-            fontSize = 11.sp,
-            color = TextSecondary,
-            lineHeight = 15.sp
-        )
-
-        Spacer(modifier = Modifier.height(14.dp))
-
-        // Countdown Status Row
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.Schedule,
-                contentDescription = null,
-                tint = if (isTimerActive) HealthCraftPrimary else TextTertiary,
-                modifier = Modifier.size(16.dp)
-            )
-            Spacer(modifier = Modifier.width(6.dp))
-            val statusText = when {
-                operationMode == OperationMode.FIXED_120 -> stringResource(R.string.state_desc_fixed_120)
-                operationMode == OperationMode.FIXED_60 -> stringResource(R.string.state_desc_fixed_60)
-                isTimerActive -> stringResource(R.string.test_zone_countdown_label, remainingMs / 1000f)
-                else -> stringResource(R.string.test_zone_idle_label)
-            }
-            Text(
-                text = statusText,
-                fontSize = 12.sp,
-                fontWeight = if (isTimerActive) FontWeight.Bold else FontWeight.Medium,
-                color = if (isTimerActive) HealthCraftPrimaryDark else TextSecondary
-            )
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Animated Progress Bar
-        LinearProgressIndicator(
-            progress = { progress },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(6.dp)
-                .clip(RoundedCornerShape(3.dp)),
-            color = HealthCraftPrimary,
-            trackColor = HealthCraftCardStroke
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Interactive Touch Surface
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(80.dp)
-                .clip(RoundedCornerShape(14.dp)),
-            shape = RoundedCornerShape(14.dp),
-            color = if (isTimerActive) HealthCraftMintContainer else HealthCraftBg,
-            border = androidx.compose.foundation.BorderStroke(
-                1.5.dp,
-                if (isTimerActive) HealthCraftMintBorder else HealthCraftCardStroke
-            )
-        ) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+            // Status and remaining time
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+                    modifier = Modifier.weight(1f, fill = false),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = if (isTimerActive) Icons.Rounded.Bolt else Icons.Rounded.TouchApp,
+                        imageVector = Icons.Rounded.Schedule,
                         contentDescription = null,
-                        tint = if (isTimerActive) HealthCraftPrimaryDark else TextTertiary,
-                        modifier = Modifier.size(20.dp)
+                        tint = if (isTimerActive) HealthCraftPrimary else TextTertiary,
+                        modifier = Modifier.size(15.dp)
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(5.dp))
+                    val statusText = when {
+                        operationMode == OperationMode.FIXED_120 -> stringResource(R.string.state_desc_fixed_120)
+                        operationMode == OperationMode.FIXED_60 -> stringResource(R.string.state_desc_fixed_60)
+                        isTimerActive -> stringResource(R.string.test_zone_countdown_label, remainingSeconds)
+                        else -> stringResource(R.string.test_zone_idle_label)
+                    }
                     Text(
-                        text = if (isTimerActive) {
-                            stringResource(R.string.test_zone_active_hint)
-                        } else {
-                            stringResource(R.string.test_zone_touch_hint)
-                        },
+                        text = statusText,
                         fontSize = 12.sp,
                         fontWeight = if (isTimerActive) FontWeight.Bold else FontWeight.Medium,
                         color = if (isTimerActive) HealthCraftPrimaryDark else TextSecondary
                     )
                 }
+
+                if (isTimerActive) {
+                    Text(
+                        text = String.format(java.util.Locale.US, "%.1fs", remainingSeconds),
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = HealthCraftPrimary
+                    )
+                }
             }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Smooth progress indicator
+            LinearProgressIndicator(
+                progress = { progress },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(6.dp)
+                    .clip(RoundedCornerShape(3.dp)),
+                color = HealthCraftPrimary,
+                trackColor = HealthCraftCardStroke
+            )
         }
     }
 }

@@ -359,8 +359,8 @@
 
     <!-- Touch & Scroll Testing Zone -->
     <string name="test_zone_title">Touch &amp; Scroll Testing Zone</string>
-    <string name="test_zone_subtitle">Interactive Dynamic Hz Verification</string>
-    <string name="test_zone_desc">Touch, swipe or tap inside this card. Display will instantly boost to peak 120 Hz, then smoothly fall back to 60 Hz after inactivity.</string>
+    <string name="test_zone_subtitle">Tap or swipe within this area</string>
+    <string name="test_zone_desc">Tap, drag or scroll here: refresh rate instantly boosts to 120 Hz. Release, and countdown timer begins dropping back to 60 Hz.</string>
     <string name="test_zone_countdown_label">Idle drop in: %1$.1f s remaining to 60 Hz</string>
     <string name="test_zone_idle_label">Idle: 60 Hz locked (touch to boost)</string>
     <string name="test_zone_touch_hint">👇 Tap or scroll here to test</string>
