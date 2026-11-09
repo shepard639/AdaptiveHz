@@ -11,6 +11,7 @@ import android.os.PowerManager
 import android.provider.Settings
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
+import android.view.inputmethod.InputMethodManager
 import com.healthcraft.adaptivehz.core.RefreshRateController
 import com.healthcraft.adaptivehz.data.OperationMode
 import com.healthcraft.adaptivehz.data.ProfileMode
@@ -160,10 +161,37 @@ class AdaptiveAccessibilityService : AccessibilityService() {
         }
         registerReceiver(powerAndBatteryReceiver, filter)
 
+        refreshImePackages()
+
         observeOperationMode()
         observeUserInteractions()
 
         Log.i(TAG, "AdaptiveAccessibilityService connected successfully")
+    }
+
+    private val cachedImePackages = mutableSetOf<String>()
+    private var lastIdleTimerResetTime: Long = 0L
+
+    private fun refreshImePackages() {
+        try {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            imm?.enabledInputMethodList?.forEach { ime ->
+                cachedImePackages.add(ime.packageName)
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Unable to query enabled IMEs: ${e.message}")
+        }
+    }
+
+    /**
+     * Determines whether a package belongs to system overlays, system UI, framework,
+     * or keyboard (IME) and should therefore never overwrite the primary foreground app.
+     */
+    fun isIgnoredSystemPackage(pkg: String): Boolean {
+        if (pkg.isEmpty() || pkg == packageName) return true
+        if (STATIC_IGNORED_PACKAGES.contains(pkg)) return true
+        if (cachedImePackages.contains(pkg)) return true
+        return false
     }
 
     private fun observeOperationMode() {
@@ -216,8 +244,9 @@ class AdaptiveAccessibilityService : AccessibilityService() {
         }
 
         when (event.eventType) {
-            AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> {
-                if (eventPkg.isNotEmpty() && eventPkg != currentForegroundPackage && eventPkg != packageName) {
+            AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED,
+            AccessibilityEvent.TYPE_WINDOWS_CHANGED -> {
+                if (eventPkg.isNotEmpty() && !isIgnoredSystemPackage(eventPkg) && eventPkg != currentForegroundPackage) {
                     onForegroundAppChanged(eventPkg)
                 } else if (eventPkg == "com.sec.android.app.launcher") {
                     // Samsung Launcher horizontal home screen page swipe
@@ -229,11 +258,37 @@ class AdaptiveAccessibilityService : AccessibilityService() {
             AccessibilityEvent.TYPE_VIEW_CLICKED,
             AccessibilityEvent.TYPE_VIEW_LONG_CLICKED,
             AccessibilityEvent.TYPE_VIEW_SCROLLED -> {
+                // Dual-Path detection: if user interacts inside an app, verify foreground package matches.
+                // Guarantees task switches, warm starts, or missed window state events are immediately recognized.
+                if (eventPkg.isNotEmpty() && !isIgnoredSystemPackage(eventPkg) && eventPkg != currentForegroundPackage) {
+                    onForegroundAppChanged(eventPkg)
+                }
+
                 val now = System.currentTimeMillis()
                 // If within transition suppression window, ignore synthetic scroll/view events
                 if (now < suppressInteractionUntil && event.eventType != AccessibilityEvent.TYPE_TOUCH_INTERACTION_START) {
                     return
                 }
+
+                // If currently locked to 60Hz by app profile (e.g. YouTube), enforce 60Hz and avoid rescheduling
+                if (currentAppMode == ProfileMode.FORCE_60) {
+                    val lowHz = repository.lowHzTarget.value
+                    if (controller.currentRefreshRateHz.value != lowHz) {
+                        controller.dropToLow(lowHz)
+                        AdaptiveCoordinator.setAdaptiveState(AdaptiveState.LOCKED_APP)
+                    }
+                    return
+                }
+
+                // Throttle idle timer resets during continuous scrolling (TYPE_VIEW_SCROLLED)
+                // to eliminate main thread CPU and Handler scheduling churn at 120Hz
+                if (event.eventType == AccessibilityEvent.TYPE_VIEW_SCROLLED) {
+                    if (now - lastIdleTimerResetTime < SCROLL_THROTTLE_MS) {
+                        return
+                    }
+                    lastIdleTimerResetTime = now
+                }
+
                 onUserInteraction()
             }
         }
@@ -406,5 +461,22 @@ class AdaptiveAccessibilityService : AccessibilityService() {
 
         const val THERMAL_OVERHEAT_THRESHOLD_CELSIUS = 41.5f
         const val ECO_IDLE_TIMEOUT_MS = 1500L
+        const val SCROLL_THROTTLE_MS = 350L
+
+        val STATIC_IGNORED_PACKAGES = setOf(
+            "android",
+            "com.android.systemui",
+            "com.google.android.gms",
+            "com.google.android.inputmethod.latin",
+            "com.samsung.android.honeyboard",
+            "com.touchtype.swiftkey",
+            "com.syntellia.fleksy.keyboard",
+            "org.pocketworkstation.pckeyboard",
+            "ru.yandex.keyboard",
+            "com.samsung.android.app.cocktailbarservice",
+            "com.samsung.android.app.smartcapture",
+            "com.samsung.android.incallui",
+            "com.samsung.android.game.gametools"
+        )
     }
 }

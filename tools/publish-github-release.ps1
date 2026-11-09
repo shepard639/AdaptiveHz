@@ -1,6 +1,6 @@
 param(
-    [string]$TagName = "v1.3.1",
-    [string]$ReleaseName = "AdaptiveHz v1.3.1 - One UI 5.1 Audit, Touch Zone & Zero-Degradation 120Hz",
+    [string]$TagName = "v1.3.2",
+    [string]$ReleaseName = "AdaptiveHz v1.3.2 - YouTube 60Hz Fix, Dual-Path Detection & IPC Power Optimization",
     [string]$ApkPath = "AdaptiveHz-release.apk"
 )
 
@@ -46,19 +46,21 @@ Write-Host "Authenticated as GitHub user: $($userResponse.login)" -ForegroundCol
 Write-Host "[3/4] Creating GitHub Release $TagName..." -ForegroundColor Yellow
 
 $releaseNotes = @"
-## 🌟 AdaptiveHz v1.3.1 — One UI 5.1 Redesign, Live Touch Test Zone & Zero-Degradation 120Hz
+## 🌟 AdaptiveHz v1.3.2 — YouTube 60Hz Fix, Dual-Path Detection & IPC Power Optimization
 
 ### 🚀 Ключевые изменения и улучшения:
-- **Устранение деградации герцовки (Strict 120Hz Clamp)**:
-  Внедрен строгий защитный механизм `RefreshRateModeResolver.clampHighTargetHz`, исключающий случайное падение целевой высокой частоты ниже 90 Гц. Автоматическое восстановление сохраненного таргета при старте приложения.
-- **Безопасная выгрузка службы**:
-  При остановке или выгрузке `AdaptiveAccessibilityService` экран аппаратно возвращается в штатные 120 Гц (`setFixed120(force = true)`), предотвращая блокировку экрана в 60 Гц.
-- **Новый компактный баннер «Аудит совместимости One UI»**:
-  Компактный баннер в стилистике HealthCraft / One UI (~68dp) с бейджем \`[98% Optimal]\` и нативной информационной шторкой \`AuditDetailsBottomSheet\` с аппаратным описанием матрицы Samsung Super AMOLED (Non-LTPO).
-- **Интерактивная «Зона тестирования касаний и скролла»**:
-  Живой тест с приоритетным перехватом касаний (\`PointerEventPass.Initial\`), динамическим бейджем \`⚡ 120 Hz\`, таймером обратного отсчета с шагом 50 мс и плавным прогресс-баром.
-- **Чистая 3-вкладочная навигация**:
-  Удалены перегруженные чек-листы аудита, возвращена чистая структура: **Главная**, **Приложения**, **О телефоне**.
+- **Устранение залипания на 120 Гц в YouTube и видеоприложениях (Fix 60Hz App Profiles)**:
+  - Ликвидирован баг перехвата активного пакета системными оверлеями (клавиатура Samsung Honeyboard, Gboard, регулятор громкости и шторка SystemUI, Google Play Services).
+  - Внедрен список исключений \`STATIC_IGNORED_PACKAGES\` и динамическое распознавание активных клавиатур (\`InputMethodManager\`).
+- **Двухконтурная детекция приложений (Dual-Path Detection)**:
+  - При любых касаниях и скролле (\`TYPE_TOUCH_INTERACTION_START\`, \`TYPE_VIEW_CLICKED\`, \`TYPE_VIEW_SCROLLED\`) проверяется принадлежность события целевому пакету.
+  - При переключении через список недавних или жестовую панель навигации 60 Гц фиксируются мгновенно до любого буста.
+- **Оптимизация энергопотребления и ликвидация IPC-шторма**:
+  - Конфигурация службы доступности переведена с \`typeAllMask\` на строгий фильтр необходимых событий.
+  - Устранены сотни паразитных вызовов \`TYPE_WINDOW_CONTENT_CHANGED\` при воспроизведении видео, позволяя процессору уходить в глубокий сон (C-states).
+  - Удалены тяжелые флаги \`flagIncludeNotImportantViews\` и \`flagReportViewIds\`.
+- **Дросселирование сброса таймера при скролле (350 мс)**:
+  - Исключена циклическая перепостановка Handler Runnable при частоте скролла 120 раз/сек.
 
 ---
 ### 📦 Установка и хеши пакета:
