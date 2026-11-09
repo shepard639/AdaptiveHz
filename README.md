@@ -3,6 +3,7 @@
 <div align="center">
 
 [![Читать на русском](https://img.shields.io/badge/Язык-Русский-red?style=for-the-badge)](README_RU.md)
+![Release](https://img.shields.io/badge/Release-v1.3.2-12A170?style=for-the-badge&logo=github)
 ![Platform](https://img.shields.io/badge/Platform-Android%2010+-00A86B?style=for-the-badge&logo=android&logoColor=white)
 ![Samsung One UI](https://img.shields.io/badge/Samsung%20One%20UI-2.5%20--%206.1+-1428A0?style=for-the-badge&logo=samsung&logoColor=white)
 ![Permissions](https://img.shields.io/badge/Internet-0%20Permissions%20(100%25%20Private)-success?style=for-the-badge)
@@ -49,12 +50,14 @@ On Samsung Galaxy devices with fixed-rate AMOLED displays (Galaxy S20, S20 FE, S
 | :--- | :--- |
 | **🚀 Power Saving Bypass (PSM)** | Unlock silky 120 Hz even when Samsung One UI Power Saving Mode is activated. |
 | **🌱 Dynamic Touch Adaptivity** | Boosts to 120 Hz on touch/gesture; drops to 60 Hz when idle (timeout customizable from 1 to 10s). |
-| **🎬 Per-App Profiles** | Auto-locks to 60 Hz in video streaming and playback apps where higher refresh rate is unnecessary. |
+| **🎬 Dual-Path Per-App Profiles** | Auto-locks to 60 Hz in video streaming (YouTube, RuTube, VK Video, Netflix) with system overlay immunity (keyboards and notifications never disrupt 60 Hz lock). |
+| **⚡ Live Touch & Scroll Test Zone** | Interactive on-screen test zone with priority pointer interception (`PointerEventPass.Initial`), real-time countdown timer, and dynamic Hz badge. |
+| **🔋 Zero-Leak IPC & CPU Optimization** | Strict accessibility event filtering eliminates parasitic `TYPE_WINDOW_CONTENT_CHANGED` Binder IPC, allowing CPU cores to remain in deep C-states. |
 | **🔋 Smart Charging Lock** | Locks at 120 Hz continuously while the device is plugged into a charger. |
 | **🛡️ Low Battery Defender** | Automatically locks to 60 Hz system-wide below 20% battery to keep you connected. |
 | **🌡️ Thermal Guard** | Temporarily caps to 60 Hz when battery temp exceeds 41.5°C to prevent throttling and degradation. |
 | **📊 Status Bar Hz Counter** | Ultra-compact live refresh rate badge (`120ᴴᶻ` / `60ᴴᶻ`) next to the system clock. |
-| **🔍 Device Audit & Matrix Advisor** | Compatibility index (0–100%), LTPO VRR hardware advisory, 90/96/120Hz high targets discovery, and One UI watchdog diagnostics. |
+| **🔍 One UI Audit & Matrix Advisor** | Compatibility index (0–100%), Super AMOLED Non-LTPO hardware specs, LTPO VRR advisory, and target frequency selector. |
 | **🎛️ Movable Floating HUD** | Lightweight floating pill overlay indicating current SurfaceFlinger frame rate. |
 
 ---
@@ -97,7 +100,10 @@ Because AdaptiveHz operates strictly offline (`0 network permissions`) for absol
 ## 🛡️ Security & Architecture
 
 - **Zero Internet Permission**: No network access is requested or possible. 100% offline, local execution.
-- **In-Memory IPC Caching**: The display controller caches mode states to prevent redundant SQLite writes to `system_settings`, eliminating micro-stutters and conserving CPU cycles.
+- **Privacy-Preserving Accessibility (`canRetrieveWindowContent="false"`)**: The accessibility service explicitly declares no content inspection permission. It cannot read screen text, passwords, or personal messages.
+- **Dual-Path Foreground Resolution**: Validates the active package on both window state changes and user touch/scroll events, guaranteeing that switching tasks via gestures or recents immediately applies the configured app profile.
+- **System Overlay & Keyboard Filter**: Ignores IMEs (Samsung Honeyboard, Gboard, SwiftKey) and system windows (SystemUI, volume panels, notifications), ensuring that typing or adjusting volume in YouTube never breaks 60 Hz lock.
+- **In-Memory IPC Caching & Scroll Throttling**: The display controller caches mode states to prevent redundant SQLite writes. Continuous scroll event scheduling is throttled to 350 ms, eliminating UI thread churn.
 - **DisplayListener Synchronization**: Directly bound to Android's hardware display manager, ensuring the HUD and status bar reflect authentic SurfaceFlinger refresh rates.
 
 ---
