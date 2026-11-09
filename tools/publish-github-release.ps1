@@ -1,4 +1,4 @@
-param(
+﻿param(
     [string]$TagName = "v1.3.2",
     [string]$ReleaseName = "AdaptiveHz v1.3.2 - YouTube 60Hz Fix, Dual-Path Detection & IPC Power Optimization",
     [string]$ApkPath = "AdaptiveHz-release.apk"

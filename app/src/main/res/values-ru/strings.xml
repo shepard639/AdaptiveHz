@@ -18,11 +18,11 @@
     <string name="master_switch_desc">120 Гц при касаниях, 60 Гц при чтении и просмотре видео</string>
 
     <!-- Режимы (короткие метки) -->
-    <string name="mode_adaptive_short">Адаптив</string>
-    <string name="mode_fixed_60_short">Фикс 60</string>
-    <string name="mode_fixed_120_short">Фикс 120</string>
+    <string name="mode_adaptive_short">Адаптивный</string>
+    <string name="mode_fixed_60_short">60 Гц</string>
+    <string name="mode_fixed_120_short">120 Гц</string>
     <string name="mode_eco_short">Эко</string>
-    <string name="mode_chip_adaptive_label">⚡ Адаптив</string>
+    <string name="mode_chip_adaptive_label">⚡ Адаптивный</string>
     <string name="mode_chip_60_label">🔒 60 Гц</string>
     <string name="mode_chip_120_label">🚀 120 Гц</string>
     <string name="mode_chip_eco_label">🌱 Эко (1.5 с)</string>
@@ -30,15 +30,15 @@
     <!-- Карточка текущего состояния -->
     <string name="current_hz_label">Частота экрана</string>
     <string name="hz_unit">Гц</string>
-    <string name="service_status_active">Активна</string>
+    <string name="service_status_active">Активно</string>
     <string name="service_status_idle">Ожидание</string>
     <string name="state_desc_fixed_120">Фиксированные 120 Гц • Без сбросов</string>
     <string name="state_desc_fixed_60">Фиксированные 60 Гц • Энергосбережение</string>
     <string name="state_desc_eco_touch">Эко • Касание (120 Гц)</string>
     <string name="state_desc_eco_idle">Эко • Покой (60 Гц)</string>
     <string name="state_desc_eco_default">Эко • Сброс за 1.5 сек</string>
-    <string name="state_desc_adaptive_touch">Адаптив • Касание (120 Гц)</string>
-    <string name="state_desc_adaptive_idle">Адаптив • Покой (60 Гц)</string>
+    <string name="state_desc_adaptive_touch">Адаптивный • Касание (120 Гц)</string>
+    <string name="state_desc_adaptive_idle">Адаптивный • Покой (60 Гц)</string>
     <string name="state_desc_locked_app">Профиль приложения</string>
     <string name="state_desc_disabled">Отключено</string>
 
@@ -131,7 +131,7 @@
     <string name="search_apps_hint">Поиск приложений…</string>
     <string name="mode_chip_60">60 Гц</string>
     <string name="mode_chip_120">120 Гц</string>
-    <string name="mode_chip_adaptive">Адаптив</string>
+    <string name="mode_chip_adaptive">Адаптивный</string>
     <string name="video_apps_preset_notice">Для YouTube, RuTube, VK Видео и Кинопоиска автоматически активен режим 60 Гц для сохранения заряда.</string>
 
     <!-- Уведомления -->
@@ -143,7 +143,7 @@
     <string name="notification_text">Плавающий индикатор запущен</string>
     <string name="notification_status_title">AdaptiveHz: %1$d Гц</string>
     <string name="notification_action_60">60 Гц</string>
-    <string name="notification_action_adaptive">Адаптив</string>
+    <string name="notification_action_adaptive">Адаптивный</string>
     <string name="notification_action_120">120 Гц</string>
 
     <!-- Онбординг (Мастер первого запуска) -->
@@ -284,7 +284,7 @@
     <string name="onboarding_mode_eco_desc">120 Гц при касаниях, быстрый сброс до 60 Гц через 1.5 сек. Максимальная автономность (+35% батареи).</string>
     <string name="onboarding_mode_120_title">🚀 Постоянные 120 Гц</string>
     <string name="onboarding_mode_120_desc">Всегда максимальная частота 120 кадров/сек без сбросов.</string>
-    <string name="badge_current">ТЕКУЩАЯ</string>
+    <string name="badge_current">Текущая</string>
 
     <!-- Navigation Audit -->
     <string name="nav_audit">Аудит</string>
@@ -292,9 +292,9 @@
     <!-- Compatibility Audit Screen -->
     <string name="audit_screen_title">Аудит совместимости устройств</string>
     <string name="audit_screen_subtitle">Независимый анализ прошивок Samsung One UI, типов матриц и системных ограничений</string>
-    <string name="audit_compatibility_index">ИНДЕКС СОВМЕСТИМОСТИ</string>
-    <string name="audit_active_device">АКТИВНОЕ УСТРОЙСТВО</string>
-    <string name="audit_score_optimal">Идеальная (Non-LTPO)</string>
+    <string name="audit_compatibility_index">Индекс совместимости</string>
+    <string name="audit_active_device">Активное устройство</string>
+    <string name="audit_score_optimal">Оптимальная (Non-LTPO)</string>
     <string name="audit_score_ltpo">Частичная (LTPO VRR)</string>
     <string name="audit_score_vendor">Требуется авторизация</string>
     <string name="audit_ltpo_warning_title">Особенность матрицы LTPO VRR</string>
@@ -341,13 +341,13 @@
     <string name="audit_check_xiaomi_finding">В HyperOS и MIUI одного флага «Отладка по USB» недостаточно. Требуется включить «Отладка по USB (Настройки безопасности)».</string>
     <string name="audit_check_xiaomi_solution">Внедрено: Предупреждение и инструкция для пользователей Xiaomi / Redmi / POCO.</string>
     <!-- One UI Audit Banner & BottomSheet -->
-    <string name="audit_banner_title">Аудит совместимости One UI</string>
-    <string name="audit_banner_status">98% Оптимально</string>
-    <string name="audit_banner_desc">Samsung AMOLED • 60/120 Гц • Полная поддержка</string>
-    <string name="audit_banner_action">Открыть аудит</string>
-    <string name="audit_sheet_title">Аудит совместимости One UI и матрицы</string>
+    <string name="audit_banner_title">Совместимость с One UI</string>
+    <string name="audit_banner_status">Оптимально</string>
+    <string name="audit_banner_desc">Samsung AMOLED • 60/120 Гц • Поддерживается</string>
+    <string name="audit_banner_action">Подробнее</string>
+    <string name="audit_sheet_title">Совместимость с One UI и матрицей</string>
     <string name="audit_sheet_subtitle">Аппаратный статус дисплея и системные интеграции</string>
-    <string name="audit_sheet_status_badge">100% Совместимо</string>
+    <string name="audit_sheet_status_badge">Оптимально</string>
     <string name="audit_sheet_device_label">Активное устройство</string>
     <string name="audit_sheet_matrix_title">Архитектура дисплея</string>
     <string name="audit_sheet_matrix_desc">Samsung Super AMOLED (Non-LTPO). Экран аппаратно поддерживает фиксированные частоты 60 Гц и 120 Гц. One UI не снижает частоту на статичных изображениях. Технология AdaptiveHz восполняет этот пробел, снижая частоту до 60 Гц во время чтения, экономя до 35–45% заряда батареи.</string>

@@ -84,6 +84,7 @@ fun DashboardScreen(
     var showAuditSheet by remember { mutableStateOf(false) }
 
     val deviceModel = remember { Build.MODEL }
+    val manufacturer = remember { Build.MANUFACTURER.replaceFirstChar { it.uppercase() } }
     val isLtpo = remember { controller.isLtpoPanel() }
     val isSamsung = remember { Build.MANUFACTURER.contains("Samsung", ignoreCase = true) }
     val (compatScore, compatLabelRes) = remember(isLtpo, isSamsung, hasAdbPermission) {
@@ -146,7 +147,7 @@ fun DashboardScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Left: Squircle logo emblem
+            // Left: Squircle logo emblem + Title + Mode badge
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     modifier = Modifier
@@ -163,73 +164,61 @@ fun DashboardScreen(
                         modifier = Modifier.size(24.dp)
                     )
                 }
-                Spacer(modifier = Modifier.width(10.dp))
-                // Middle Pill: Mode status
-                val modeLabel = when (operationMode) {
-                    OperationMode.ADAPTIVE -> stringResource(R.string.mode_adaptive_short)
-                    OperationMode.FIXED_60 -> stringResource(R.string.mode_fixed_60_short)
-                    OperationMode.FIXED_120 -> stringResource(R.string.mode_fixed_120_short)
-                    OperationMode.ECO -> stringResource(R.string.mode_eco_short)
-                }
-                Row(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(if (operationMode == OperationMode.FIXED_120) MetricAmberBg else HealthCraftMintContainer)
-                        .border(1.dp, if (operationMode == OperationMode.FIXED_120) MetricAmberBorder else HealthCraftMintBorder, RoundedCornerShape(20.dp))
-                        .padding(horizontal = 10.dp, vertical = 6.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.FlashOn,
-                        contentDescription = null,
-                        tint = if (operationMode == OperationMode.FIXED_120) MetricAmberText else HealthCraftPrimary,
-                        modifier = Modifier.size(14.dp)
-                    )
-                    Spacer(modifier = Modifier.width(5.dp))
+                Spacer(modifier = Modifier.width(12.dp))
+                Column {
                     Text(
                         text = "AdaptiveHz",
-                        fontSize = 12.sp,
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = TextPrimary
                     )
-                    Spacer(modifier = Modifier.width(6.dp))
+                    val modeLabel = when (operationMode) {
+                        OperationMode.ADAPTIVE -> stringResource(R.string.mode_adaptive_short)
+                        OperationMode.FIXED_60 -> stringResource(R.string.mode_fixed_60_short)
+                        OperationMode.FIXED_120 -> stringResource(R.string.mode_fixed_120_short)
+                        OperationMode.ECO -> stringResource(R.string.mode_eco_short)
+                    }
+                    val isFixed120 = operationMode == OperationMode.FIXED_120
                     Box(
                         modifier = Modifier
+                            .padding(top = 2.dp)
                             .clip(RoundedCornerShape(6.dp))
-                            .background(if (operationMode == OperationMode.FIXED_120) MetricAmberText else HealthCraftPrimary)
-                            .padding(horizontal = 5.dp, vertical = 2.dp)
+                            .background(if (isFixed120) MetricAmberBg else HealthCraftMintContainer)
+                            .border(0.5.dp, if (isFixed120) MetricAmberBorder else HealthCraftMintBorder, RoundedCornerShape(6.dp))
+                            .padding(horizontal = 7.dp, vertical = 2.dp)
                     ) {
                         Text(
-                            text = modeLabel.uppercase(),
-                            fontSize = 9.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            color = Color.White
+                            text = modeLabel,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = if (isFixed120) MetricAmberText else HealthCraftPrimary
                         )
                     }
                 }
             }
 
-            // Right: Dynamic Device pill
+            // Right: Clean Service Status Pill
+            val isServiceOnline = isServiceActive
             Row(
                 modifier = Modifier
                     .clip(RoundedCornerShape(20.dp))
-                    .background(HealthCraftMintContainer)
-                    .border(1.dp, HealthCraftMintBorder, RoundedCornerShape(20.dp))
-                    .padding(horizontal = 10.dp, vertical = 6.dp),
+                    .background(if (isServiceOnline) HealthCraftMintContainer else HealthCraftBg)
+                    .border(1.dp, if (isServiceOnline) HealthCraftMintBorder else HealthCraftCardStroke, RoundedCornerShape(20.dp))
+                    .padding(horizontal = 11.dp, vertical = 6.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Rounded.PhoneAndroid,
-                    contentDescription = null,
-                    tint = HealthCraftPrimary,
-                    modifier = Modifier.size(14.dp)
+                Box(
+                    modifier = Modifier
+                        .size(7.dp)
+                        .clip(CircleShape)
+                        .background(if (isServiceOnline) HealthCraftPrimary else TextTertiary)
                 )
-                Spacer(modifier = Modifier.width(4.dp))
+                Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = deviceModel,
+                    text = if (isServiceOnline) stringResource(R.string.service_status_active) else stringResource(R.string.service_status_idle),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = HealthCraftPrimary
+                    color = if (isServiceOnline) HealthCraftPrimary else TextSecondary
                 )
             }
         }
@@ -258,28 +247,13 @@ fun DashboardScreen(
                     }
                     Spacer(modifier = Modifier.width(10.dp))
                     Column {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = stringResource(R.string.current_hz_label),
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = TextPrimary
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(HealthCraftBg)
-                                    .padding(horizontal = 6.dp, vertical = 2.dp)
-                            ) {
-                                Text(
-                                    text = if (isServiceActive) stringResource(R.string.service_status_active) else stringResource(R.string.service_status_idle),
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    color = TextSecondary
-                                )
-                            }
-                        }
+                        Text(
+                            text = stringResource(R.string.current_hz_label),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = TextPrimary
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
                         val statusDesc = when (operationMode) {
                             OperationMode.FIXED_120 -> stringResource(R.string.state_desc_fixed_120)
                             OperationMode.FIXED_60 -> stringResource(R.string.state_desc_fixed_60)
@@ -297,7 +271,7 @@ fun DashboardScreen(
                         }
                         Text(
                             text = statusDesc,
-                            fontSize = 11.sp,
+                            fontSize = 12.sp,
                             color = TextSecondary
                         )
                     }
@@ -420,6 +394,9 @@ fun DashboardScreen(
         // 3. One UI Compatibility Audit Banner
         OneUiAuditBanner(
             compatScore = compatScore,
+            isLtpo = isLtpo,
+            deviceModel = deviceModel,
+            manufacturer = manufacturer,
             onOpenAuditClick = { showAuditSheet = true }
         )
 
@@ -1139,11 +1116,10 @@ fun DashboardScreen(
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
                     Text(
-                        text = stringResource(R.string.healthcraft_promo_card_subtitle).uppercase(),
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = HealthCraftPrimaryDark,
-                        letterSpacing = 0.5.sp
+                        text = stringResource(R.string.healthcraft_promo_card_subtitle),
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = HealthCraftPrimaryDark
                     )
                     Text(
                         text = stringResource(R.string.healthcraft_promo_card_title),
@@ -1216,27 +1192,28 @@ fun LiveRefreshRateBadge(
         border = androidx.compose.foundation.BorderStroke(1.dp, HealthCraftMintBorder)
     ) {
         Column(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = stringResource(R.string.badge_current),
-                fontSize = 9.sp,
-                fontWeight = FontWeight.Bold,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.SemiBold,
                 color = HealthCraftPrimary
             )
             Row(verticalAlignment = Alignment.Bottom) {
                 Text(
                     text = "$currentHz",
-                    fontSize = 20.sp,
+                    fontSize = 22.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = HealthCraftPrimaryDark
                 )
                 Text(
                     text = " " + stringResource(R.string.hz_unit),
-                    fontSize = 11.sp,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = HealthCraftPrimary
+                    color = HealthCraftPrimary,
+                    modifier = Modifier.padding(bottom = 2.dp)
                 )
             }
         }
@@ -1250,10 +1227,12 @@ fun LiveRefreshRateBadge(
 @Composable
 fun OneUiAuditBanner(
     compatScore: Int,
+    isLtpo: Boolean,
+    deviceModel: String,
+    manufacturer: String,
     onOpenAuditClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val model = remember { Build.MODEL }
     Surface(
         onClick = onOpenAuditClick,
         modifier = modifier.fillMaxWidth(),
@@ -1264,7 +1243,7 @@ fun OneUiAuditBanner(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 14.dp, vertical = 12.dp),
+                .padding(horizontal = 16.dp, vertical = 14.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Left icon: Rounded squircle with shield per mockup
@@ -1284,7 +1263,7 @@ fun OneUiAuditBanner(
                 )
             }
 
-            Spacer(modifier = Modifier.width(10.dp))
+            Spacer(modifier = Modifier.width(12.dp))
 
             // Center info: Title + score badge + device subtitle
             Column(
@@ -1293,36 +1272,34 @@ fun OneUiAuditBanner(
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
                         text = stringResource(R.string.audit_banner_title),
-                        fontSize = 12.5.sp,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color = TextPrimary,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f, fill = false)
+                        color = TextPrimary
                     )
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(6.dp))
                             .background(HealthCraftMintContainer)
-                            .border(1.dp, HealthCraftMintBorder, RoundedCornerShape(6.dp))
-                            .padding(horizontal = 5.dp, vertical = 1.5.dp)
+                            .border(0.5.dp, HealthCraftMintBorder, RoundedCornerShape(6.dp))
+                            .padding(horizontal = 6.dp, vertical = 2.dp)
                     ) {
                         Text(
-                            text = "$compatScore% Optimal",
-                            fontSize = 9.sp,
-                            fontWeight = FontWeight.ExtraBold,
+                            text = stringResource(R.string.audit_banner_status),
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.SemiBold,
                             color = HealthCraftPrimary
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(2.dp))
+                Spacer(modifier = Modifier.height(3.dp))
+                val panelName = if (isLtpo) "AMOLED (LTPO VRR)" else "Super AMOLED (Non-LTPO)"
                 Text(
-                    text = "$model • One UI 5.1 (Android ${Build.VERSION.RELEASE})",
-                    fontSize = 11.sp,
+                    text = "$manufacturer $deviceModel • $panelName",
+                    fontSize = 11.5.sp,
                     color = TextSecondary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -1331,19 +1308,19 @@ fun OneUiAuditBanner(
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            // Right button
-            Surface(
-                onClick = onOpenAuditClick,
-                shape = RoundedCornerShape(12.dp),
-                color = HealthCraftBg,
-                border = androidx.compose.foundation.BorderStroke(1.dp, HealthCraftMintBorder)
+            // Right Chevron indicating card can be opened
+            Box(
+                modifier = Modifier
+                    .size(32.dp)
+                    .clip(CircleShape)
+                    .background(HealthCraftBg),
+                contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = stringResource(R.string.audit_banner_action),
-                    fontSize = 11.5.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = HealthCraftPrimary,
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 7.dp)
+                Icon(
+                    imageVector = Icons.Rounded.ChevronRight,
+                    contentDescription = stringResource(R.string.audit_banner_action),
+                    tint = TextSecondary,
+                    modifier = Modifier.size(18.dp)
                 )
             }
         }
@@ -1643,9 +1620,9 @@ fun AuditDetailsBottomSheet(
                 ) {
                     Column {
                         Text(
-                            text = stringResource(R.string.audit_sheet_device_label).uppercase(),
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold,
+                            text = stringResource(R.string.audit_sheet_device_label),
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.SemiBold,
                             color = TextTertiary
                         )
                         Text(

@@ -19,8 +19,8 @@
 
     <!-- Modes (Short labels) -->
     <string name="mode_adaptive_short">Adaptive</string>
-    <string name="mode_fixed_60_short">Fix 60</string>
-    <string name="mode_fixed_120_short">Fix 120</string>
+    <string name="mode_fixed_60_short">60 Hz</string>
+    <string name="mode_fixed_120_short">120 Hz</string>
     <string name="mode_eco_short">Eco</string>
     <string name="mode_chip_adaptive_label">⚡ Adaptive</string>
     <string name="mode_chip_60_label">🔒 60 Hz</string>
@@ -284,7 +284,7 @@
     <string name="onboarding_mode_eco_desc">120 Hz on touch, quick drop to 60 Hz after 1.5s idle. Maximum battery life (+35%).</string>
     <string name="onboarding_mode_120_title">🚀 Fixed 120 Hz</string>
     <string name="onboarding_mode_120_desc">Always maximum 120 fps smoothness without drops.</string>
-    <string name="badge_current">CURRENT</string>
+    <string name="badge_current">Current</string>
 
     <!-- Navigation Audit -->
     <string name="nav_audit">Audit</string>
@@ -292,8 +292,8 @@
     <!-- Compatibility Audit Screen -->
     <string name="audit_screen_title">Device Compatibility Audit</string>
     <string name="audit_screen_subtitle">Independent analysis of Samsung One UI, panel architectures, and system restrictions</string>
-    <string name="audit_compatibility_index">COMPATIBILITY INDEX</string>
-    <string name="audit_active_device">ACTIVE DEVICE</string>
+    <string name="audit_compatibility_index">Compatibility Index</string>
+    <string name="audit_active_device">Active Device</string>
     <string name="audit_score_optimal">Optimal (Non-LTPO)</string>
     <string name="audit_score_ltpo">Partial (LTPO VRR)</string>
     <string name="audit_score_vendor">Secondary Auth Required</string>
@@ -341,13 +341,13 @@
     <string name="audit_check_xiaomi_finding">HyperOS and MIUI require enabling \"USB Debugging (Security settings)\" with an authorized Mi Account and SIM card.</string>
     <string name="audit_check_xiaomi_solution">Resolved: Explicit vendor alert modal and instructions for Xiaomi / Redmi / POCO users.</string>
     <!-- One UI Audit Banner & BottomSheet -->
-    <string name="audit_banner_title">One UI Compatibility Audit</string>
-    <string name="audit_banner_status">98% Optimal</string>
-    <string name="audit_banner_desc">Samsung AMOLED • 60/120 Hz • Full Support</string>
-    <string name="audit_banner_action">Open Audit</string>
+    <string name="audit_banner_title">One UI Compatibility</string>
+    <string name="audit_banner_status">Optimal</string>
+    <string name="audit_banner_desc">Samsung AMOLED • 60/120 Hz • Supported</string>
+    <string name="audit_banner_action">Details</string>
     <string name="audit_sheet_title">One UI Compatibility &amp; Display Audit</string>
     <string name="audit_sheet_subtitle">Hardware display profile &amp; automated tuning</string>
-    <string name="audit_sheet_status_badge">100% Compatible</string>
+    <string name="audit_sheet_status_badge">Optimal</string>
     <string name="audit_sheet_device_label">Active Device</string>
     <string name="audit_sheet_matrix_title">Display Matrix Architecture</string>
     <string name="audit_sheet_matrix_desc">Samsung Super AMOLED (Non-LTPO). Supports fixed hardware modes of 60 Hz and 120 Hz. One UI does not reduce refresh rate on static content by default. AdaptiveHz bridges this gap, saving up to 35–45% battery.</string>
